@@ -6,4 +6,8 @@
   .landing-hero {
     background-image: url('../assets/img/bg-primary.webp');
   }
+
+  .auth-hero {
+    background-image: url('../assets/img/auth-bg.webp');
+  }
 }
