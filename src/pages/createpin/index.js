@@ -1,6 +1,51 @@
 import AuthLeft from "@/components/AuthLeft";
+import { useState } from "react";
+import Cookies from "js-cookie";
+import { toast, ToastContainer, Flip } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+import { updatePin } from "@/utils/https/user";
+import { useRouter } from "next/router";
 
 export default function CreatePin() {
+	const router = useRouter();
+
+	const [pins, setPins] = useState({ pin1: "", pin2: "", pin3: "", pin4: "", pin5: "", pin6: "" });
+
+	const onChangePin = (e) => {
+		setPins((pins) => {
+			return { ...pins, [e.target.name]: e.target.value };
+		});
+	};
+
+	const createPinHandler = (e) => {
+		e.preventDefault();
+
+		const userId = Cookies.get("userId");
+		const token = Cookies.get("userToken");
+
+		let arrayPin = Object.keys(pins).map((key) => pins[key]);
+		const intPin = parseInt(arrayPin.join(""));
+
+		toast.promise(updatePin(intPin, userId, token), {
+			pending: "Please wait",
+			success: {
+				render() {
+					Cookies.set("userPin", intPin);
+					setTimeout(() => {
+						router.push("/home");
+					}, 3000);
+					return "Succesfully created pin";
+				},
+			},
+			error: {
+				render({ data }) {
+					return data["response"]["data"]["msg"];
+				},
+			},
+		});
+	};
+
 	return (
 		<div className="container">
 			<div className="flex">
@@ -21,77 +66,118 @@ export default function CreatePin() {
 					</div>
 					<div className="form-wrapper flex flex-col gap-y-20">
 						<div className="flex justify-center items-center gap-3 md:gap-6">
-							{/* //TODO: if filled the bottom border inside input will be none and the border of the input will be fazzpay-primary */}
 							<div
-								className={`w-10 md:w-12 lg:w-14 h-12 md:h-14 lg:h-16 flex justify-center items-center border-fazzpay-accent border border-solid rounded-lg`}
+								className={`w-10 md:w-12 lg:w-14 h-12 md:h-14 lg:h-16 flex justify-center items-center ${
+									pins.pin1 ? "border-fazzpay-primary" : "border-fazzpay-accent"
+								} border border-solid rounded-lg`}
 							>
 								<input
 									type="text"
 									name="pin1"
+									value={pins.pin1}
+									onChange={onChangePin}
 									maxLength={1}
-									className={`w-3/4 h-3/4 text-center outline-none border-b border-solid border-b-fazzpay-accent text-base md:text-3xl font-bold`}
+									className={`w-3/4 h-3/4 text-center outline-none border-b border-solid ${
+										pins.pin1 ? "border-b-transparent" : "border-b-fazzpay-accent"
+									} text-base md:text-3xl font-bold`}
 								/>
 							</div>
 							<div
-								className={`w-10 md:w-12 lg:w-14 h-12 md:h-14 lg:h-16 flex justify-center items-center border-fazzpay-accent border border-solid rounded-lg`}
+								className={`w-10 md:w-12 lg:w-14 h-12 md:h-14 lg:h-16 flex justify-center items-center ${
+									pins.pin2 ? "border-fazzpay-primary" : "border-fazzpay-accent"
+								} border border-solid rounded-lg`}
 							>
 								<input
 									type="text"
 									name="pin2"
+									value={pins.pin2}
+									onChange={onChangePin}
 									maxLength={1}
-									className={`w-3/4 h-3/4 text-center outline-none border-b border-solid border-b-fazzpay-accent text-base md:text-3xl font-bold`}
+									className={`w-3/4 h-3/4 text-center outline-none border-b border-solid ${
+										pins.pin2 ? "border-b-transparent" : "border-b-fazzpay-accent"
+									} text-base md:text-3xl font-bold`}
 								/>
 							</div>
 							<div
-								className={`w-10 md:w-12 lg:w-14 h-12 md:h-14 lg:h-16 flex justify-center items-center border-fazzpay-accent border border-solid rounded-lg`}
+								className={`w-10 md:w-12 lg:w-14 h-12 md:h-14 lg:h-16 flex justify-center items-center ${
+									pins.pin3 ? "border-fazzpay-primary" : "border-fazzpay-accent"
+								} border border-solid rounded-lg`}
 							>
 								<input
 									type="text"
 									name="pin3"
+									value={pins.pin3}
+									onChange={onChangePin}
 									maxLength={1}
-									className={`w-3/4 h-3/4 text-center outline-none border-b border-solid border-b-fazzpay-accent text-base md:text-3xl font-bold`}
+									className={`w-3/4 h-3/4 text-center outline-none border-b border-solid ${
+										pins.pin3 ? "border-b-transparent" : "border-b-fazzpay-accent"
+									} text-base md:text-3xl font-bold`}
 								/>
 							</div>
 							<div
-								className={`w-10 md:w-12 lg:w-14 h-12 md:h-14 lg:h-16 flex justify-center items-center border-fazzpay-accent border border-solid rounded-lg`}
+								className={`w-10 md:w-12 lg:w-14 h-12 md:h-14 lg:h-16 flex justify-center items-center ${
+									pins.pin4 ? "border-fazzpay-primary" : "border-fazzpay-accent"
+								} border border-solid rounded-lg`}
 							>
 								<input
 									type="text"
 									name="pin4"
+									value={pins.pin4}
+									onChange={onChangePin}
 									maxLength={1}
-									className={`w-3/4 h-3/4 text-center outline-none border-b border-solid border-b-fazzpay-accent text-base md:text-3xl font-bold`}
+									className={`w-3/4 h-3/4 text-center outline-none border-b border-solid ${
+										pins.pin4 ? "border-b-transparent" : "border-b-fazzpay-accent"
+									} text-base md:text-3xl font-bold`}
 								/>
 							</div>
 							<div
-								className={`w-10 md:w-12 lg:w-14 h-12 md:h-14 lg:h-16 flex justify-center items-center border-fazzpay-accent border border-solid rounded-lg`}
+								className={`w-10 md:w-12 lg:w-14 h-12 md:h-14 lg:h-16 flex justify-center items-center ${
+									pins.pin5 ? "border-fazzpay-primary" : "border-fazzpay-accent"
+								} border border-solid rounded-lg`}
 							>
 								<input
 									type="text"
 									name="pin5"
+									value={pins.pin5}
+									onChange={onChangePin}
 									maxLength={1}
-									className={`w-3/4 h-3/4 text-center outline-none border-b border-solid border-b-fazzpay-accent text-base md:text-3xl font-bold`}
+									className={`w-3/4 h-3/4 text-center outline-none border-b border-solid ${
+										pins.pin5 ? "border-b-transparent" : "border-b-fazzpay-accent"
+									} text-base md:text-3xl font-bold`}
 								/>
 							</div>
 							<div
-								className={`w-10 md:w-12 lg:w-14 h-12 md:h-14 lg:h-16 flex justify-center items-center border-fazzpay-accent border border-solid rounded-lg`}
+								className={`w-10 md:w-12 lg:w-14 h-12 md:h-14 lg:h-16 flex justify-center items-center ${
+									pins.pin6 ? "border-fazzpay-primary" : "border-fazzpay-accent"
+								} border border-solid rounded-lg`}
 							>
 								<input
 									type="text"
 									name="pin6"
+									value={pins.pin6}
+									onChange={onChangePin}
 									maxLength={1}
-									className={`w-3/4 h-3/4 text-center outline-none border-b border-solid border-b-fazzpay-accent text-base md:text-3xl font-bold`}
+									className={`w-3/4 h-3/4 text-center outline-none border-b border-solid ${
+										pins.pin6 ? "border-b-transparent" : "border-b-fazzpay-accent"
+									} text-base md:text-3xl font-bold`}
 								/>
 							</div>
 						</div>
 						<div className="confirm-button pt-10">
-							{/* //TODO: if all input fields are filled then the text became fazzpay-secondary and the background became fazzpay-primary */}
-							<button className="btn normal-case border-none w-full bg-[#DADADA] text-[#88888F]">
+							<button
+								disabled={
+									!pins.pin1 || !pins.pin2 || !pins.pin3 || !pins.pin4 || !pins.pin5 || !pins.pin6
+								}
+								onClick={createPinHandler}
+								className="btn normal-case border-transparent w-full bg-fazzpay-primary text-fazzpay-secondary hover:bg-fazzpay-secondary hover:text-fazzpay-primary disabled:bg-[#DADADA] disabled:text-[#88888F]"
+							>
 								Confirm
 							</button>
 						</div>
 					</div>
 				</div>
 			</div>
+			<ToastContainer position="top-right" autoClose={3000} transition={Flip} theme="colored" />
 		</div>
 	);
 }

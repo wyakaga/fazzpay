@@ -1,9 +1,50 @@
+import { useRouter } from "next/router";
 import { useState } from "react";
+import { toast, ToastContainer, Flip } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+import { resetPwd } from "@/utils/https/auth";
 
 import AuthLeft from "@/components/AuthLeft";
 
 export default function NewPwd() {
+	const { query } = useRouter();
+	const router = useRouter();
+
+	const userId = query.userId;
+
 	const [visible, setVisible] = useState(false);
+	const [newPassword, setNewPassword] = useState("");
+	const [confirmPassword, setConfirmPassword] = useState("");
+
+	const onChangeNewPwd = (e) => {
+		setNewPassword(e.target.value);
+	};
+
+	const onChangeConfirmPwd = (e) => {
+		setConfirmPassword(e.target.value);
+	};
+
+	const resetPwdHandler = (e) => {
+		e.preventDefault();
+
+		toast.promise(resetPwd(userId, newPassword, confirmPassword), {
+			pending: "Please wait...",
+			success: {
+				render() {
+					setTimeout(() => {
+						router.push("/login");
+					}, 3000);
+					return "Succesfully change password";
+				},
+			},
+			error: {
+				render({ data }) {
+					return data["response"]["data"]["msg"];
+				},
+			},
+		});
+	};
 
 	return (
 		<div className="container">
@@ -24,12 +65,16 @@ export default function NewPwd() {
 					</div>
 					<div className="form-wrapper flex flex-col gap-y-20">
 						<form className="flex flex-col gap-y-10">
-							{/* //TODO: when error the icon and input border became fazzpay-error otherwise fazzpay-primary */}
 							<div className="relative w-full ease-in-out transition-all duration-300">
 								<input
 									type={visible ? "text" : "password"}
 									placeholder="Create new password"
-									className="placeholder:text-[#A9A9A9CC] text-fazzpay-dark border-b-[1.5px] border-[#A9A9A999] hover:border-gray-400 focus:outline-none appearance-none bg-transparent rounded-none h-10 pl-10 w-full"
+									name="newPassword"
+									value={newPassword}
+									onChange={onChangeNewPwd}
+									className={`placeholder:text-[#A9A9A9CC] text-fazzpay-dark border-b-[1.5px] ${
+										newPassword ? "border-fazzpay-primary" : "border-[#A9A9A999]"
+									} hover:border-gray-400 focus:outline-none appearance-none bg-transparent rounded-none h-10 pl-10 w-full`}
 								/>
 								{visible ? (
 									<svg
@@ -37,7 +82,7 @@ export default function NewPwd() {
 										width="16"
 										height="16"
 										fill="currentColor"
-										class="bi bi-eye-slash fill-[#A9A9A9CC] cursor-pointer h-6 w-6 absolute top-[6px] right-[10px]"
+										className="bi bi-eye-slash fill-[#A9A9A9CC] cursor-pointer h-6 w-6 absolute top-[6px] right-[10px]"
 										viewBox="0 0 16 16"
 										onClick={() => setVisible(!visible)}
 									>
@@ -51,7 +96,7 @@ export default function NewPwd() {
 										width="16"
 										height="16"
 										fill="currentColor"
-										class="bi bi-eye fill-[#A9A9A9CC] cursor-pointer h-6 w-6 absolute top-[6px] right-[10px]"
+										className="bi bi-eye fill-[#A9A9A9CC] cursor-pointer h-6 w-6 absolute top-[6px] right-[10px]"
 										viewBox="0 0 16 16"
 										onClick={() => setVisible(!visible)}
 									>
@@ -65,7 +110,9 @@ export default function NewPwd() {
 									viewBox="0 0 24 24"
 									fill="none"
 									xmlns="http://www.w3.org/2000/svg"
-									className="absolute top-[6px] h-6 stroke-[#A9A9A9CC]"
+									className={`absolute top-[6px] h-6 ${
+										newPassword ? "stroke-fazzpay-primary" : "stroke-[#A9A9A9CC]"
+									}`}
 								>
 									<path
 										d="M19 11H5V21H19V11Z"
@@ -87,7 +134,12 @@ export default function NewPwd() {
 								<input
 									type={visible ? "text" : "password"}
 									placeholder="Create new password"
-									className="placeholder:text-[#A9A9A9CC] text-fazzpay-dark border-b-[1.5px] border-[#A9A9A999] hover:border-gray-400 focus:outline-none appearance-none bg-transparent rounded-none h-10 pl-10 w-full"
+									name="confirmPassword"
+									value={confirmPassword}
+									onChange={onChangeConfirmPwd}
+									className={`placeholder:text-[#A9A9A9CC] text-fazzpay-dark border-b-[1.5px] ${
+										confirmPassword ? "border-fazzpay-primary" : "border-[#A9A9A999]"
+									} hover:border-gray-400 focus:outline-none appearance-none bg-transparent rounded-none h-10 pl-10 w-full`}
 								/>
 								{visible ? (
 									<svg
@@ -95,7 +147,7 @@ export default function NewPwd() {
 										width="16"
 										height="16"
 										fill="currentColor"
-										class="bi bi-eye-slash fill-[#A9A9A9CC] cursor-pointer h-6 w-6 absolute top-[6px] right-[10px]"
+										className="bi bi-eye-slash fill-[#A9A9A9CC] cursor-pointer h-6 w-6 absolute top-[6px] right-[10px]"
 										viewBox="0 0 16 16"
 										onClick={() => setVisible(!visible)}
 									>
@@ -109,7 +161,7 @@ export default function NewPwd() {
 										width="16"
 										height="16"
 										fill="currentColor"
-										class="bi bi-eye fill-[#A9A9A9CC] cursor-pointer h-6 w-6 absolute top-[6px] right-[10px]"
+										className="bi bi-eye fill-[#A9A9A9CC] cursor-pointer h-6 w-6 absolute top-[6px] right-[10px]"
 										viewBox="0 0 16 16"
 										onClick={() => setVisible(!visible)}
 									>
@@ -123,7 +175,9 @@ export default function NewPwd() {
 									viewBox="0 0 24 24"
 									fill="none"
 									xmlns="http://www.w3.org/2000/svg"
-									className="absolute top-[6px] h-6 stroke-[#A9A9A9CC]"
+									className={`absolute top-[6px] h-6 ${
+										confirmPassword ? "stroke-fazzpay-primary" : "stroke-[#A9A9A9CC]"
+									}`}
 								>
 									<path
 										d="M19 11H5V21H19V11Z"
@@ -143,14 +197,18 @@ export default function NewPwd() {
 							</div>
 						</form>
 						<div className="resetpwd-button pt-10">
-							{/* //TODO: if all input fields are filled then the text became fazzpay-secondary and the background became fazzpay-primary */}
-							<button className="btn normal-case border-none w-full bg-[#DADADA] text-[#88888F]">
+							<button
+								disabled={!newPassword || !confirmPassword}
+								onClick={resetPwdHandler}
+								className="btn normal-case border-transparent w-full bg-fazzpay-primary text-fazzpay-secondary hover:bg-fazzpay-secondary hover:text-fazzpay-primary disabled:bg-[#DADADA] disabled:text-[#88888F]"
+							>
 								Reset Password
 							</button>
 						</div>
 					</div>
 				</div>
 			</div>
+			<ToastContainer position="top-right" autoClose={3000} transition={Flip} theme="colored" />
 		</div>
 	);
 }

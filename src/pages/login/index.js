@@ -1,10 +1,63 @@
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { useState } from "react";
+import Cookies from "js-cookie";
+import { toast, ToastContainer, Flip } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+import { login } from "@/utils/https/auth";
 
 import AuthLeft from "@/components/AuthLeft";
 
 export default function Login() {
+	const router = useRouter();
+
+	const navigate = (to) => router.push(to);
+
 	const [visible, setVisible] = useState(false);
+	const [form, setForm] = useState({ email: "", password: "" });
+	const [error, setError] = useState("");
+
+	const onChangeForm = (e) => {
+		setForm((form) => {
+			return { ...form, [e.target.name]: e.target.value };
+		});
+	};
+
+	const loginHandler = (e) => {
+		e.preventDefault();
+
+		const navigateCreatePin = () => {
+			setTimeout(() => {
+				navigate("/createpin");
+			}, 3000);
+		};
+
+		const navigateHome = () => {
+			setTimeout(() => {
+				navigate("/home");
+			}, 3000);
+		};
+
+		toast.promise(login(form), {
+			pending: "Please wait...",
+			success: {
+				render({ data }) {
+					Cookies.set("userId", data["data"]["data"]["id"]);
+					Cookies.set("userPin", data["data"]["data"]["pin"]);
+					Cookies.set("userToken", data["data"]["data"]["token"]);
+					Cookies.get("userPin") ? navigateHome() : navigateCreatePin();
+					return "Successfully logged in";
+				},
+			},
+			error: {
+				render({ data }) {
+					setError(data["response"]["data"]["msg"]);
+					return data["response"]["data"]["msg"];
+				},
+			},
+		});
+	};
 
 	return (
 		<div className="container">
@@ -25,12 +78,20 @@ export default function Login() {
 					</div>
 					<div className="form-wrapper flex flex-col gap-y-5">
 						<form className="flex flex-col gap-y-10">
-							{/* //TODO: when error the icon and input border became fazzpay-error otherwise fazzpay-primary */}
 							<div className="relative w-full ease-in-out transition-all duration-300">
 								<input
 									type="email"
+									name="email"
+									value={form.email}
+									onChange={onChangeForm}
 									placeholder="Enter your e-mail"
-									className="placeholder:text-[#A9A9A9CC] text-fazzpay-dark border-b-[1.5px] border-[#A9A9A999] hover:border-gray-400 focus:outline-none appearance-none bg-transparent rounded-none h-10 pl-10 w-full"
+									className={`placeholder:text-[#A9A9A9CC] text-fazzpay-dark border-b-[1.5px] ${
+										form.email && !error
+											? "border-fazzpay-primary"
+											: form.email && error
+											? "border-fazzpay-error"
+											: "border-[#A9A9A999]"
+									} hover:border-gray-400 focus:outline-none appearance-none bg-transparent rounded-none h-10 pl-10 w-full`}
 								/>
 								<svg
 									width="24"
@@ -38,7 +99,13 @@ export default function Login() {
 									viewBox="0 0 24 24"
 									fill="none"
 									xmlns="http://www.w3.org/2000/svg"
-									className="absolute top-[6px] h-6 stroke-[#A9A9A9CC]"
+									className={`absolute top-[6px] h-6 ${
+										form.email && !error
+											? "stroke-fazzpay-primary"
+											: form.email && error
+											? "stroke-fazzpay-error"
+											: "stroke-[#A9A9A9CC]"
+									}`}
 								>
 									<path
 										d="M22 5H2V19H22V5Z"
@@ -59,8 +126,17 @@ export default function Login() {
 							<div className="relative w-full ease-in-out transition-all duration-300">
 								<input
 									type={visible ? "text" : "password"}
+									name="password"
+									value={form.password}
+									onChange={onChangeForm}
 									placeholder="Enter your password"
-									className="placeholder:text-[#A9A9A9CC] text-fazzpay-dark border-b-[1.5px] border-[#A9A9A999] hover:border-gray-400 focus:outline-none appearance-none bg-transparent rounded-none h-10 pl-10 w-full"
+									className={`placeholder:text-[#A9A9A9CC] text-fazzpay-dark border-b-[1.5px] ${
+										form.password && !error
+											? "border-fazzpay-primary"
+											: form.password && error
+											? "border-fazzpay-error"
+											: "border-[#A9A9A999]"
+									} hover:border-gray-400 focus:outline-none appearance-none bg-transparent rounded-none h-10 pl-10 w-full`}
 								/>
 								{visible ? (
 									<svg
@@ -96,7 +172,13 @@ export default function Login() {
 									viewBox="0 0 24 24"
 									fill="none"
 									xmlns="http://www.w3.org/2000/svg"
-									className="absolute top-[6px] h-6 stroke-[#A9A9A9CC]"
+									className={`absolute top-[6px] h-6 ${
+										form.password && !error
+											? "stroke-fazzpay-primary"
+											: form.password && error
+											? "stroke-fazzpay-error"
+											: "stroke-[#A9A9A9CC]"
+									}`}
 								>
 									<path
 										d="M19 11H5V21H19V11Z"
@@ -123,9 +205,13 @@ export default function Login() {
 								Forgot password?
 							</Link>
 						</div>
+						{error ? <p className="text-fazzpay-error text-center">{error}</p> : null}
 						<div className="login-button pt-10">
-							{/* //TODO: if all input fields are filled then the text became fazzpay-secondary and the background became fazzpay-primary */}
-							<button className="btn normal-case border-none w-full bg-[#DADADA] text-[#88888F]">
+							<button
+								disabled={!form.email || !form.password}
+								onClick={loginHandler}
+								className="btn normal-case border-transparent w-full bg-fazzpay-primary text-fazzpay-secondary hover:bg-fazzpay-secondary hover:text-fazzpay-primary disabled:bg-[#DADADA] disabled:text-[#88888F]"
+							>
 								Login
 							</button>
 						</div>
@@ -138,6 +224,7 @@ export default function Login() {
 					</div>
 				</div>
 			</div>
+			<ToastContainer position="top-right" autoClose={3000} transition={Flip} theme="colored" />
 		</div>
 	);
 }

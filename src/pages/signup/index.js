@@ -1,10 +1,45 @@
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { useState } from "react";
+import { toast, ToastContainer, Flip } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+import { signup } from "@/utils/https/auth";
 
 import AuthLeft from "@/components/AuthLeft";
 
 export default function SignUp() {
+	const router = useRouter();
+
 	const [visible, setVisible] = useState(false);
+	const [form, setForm] = useState({ firstName: "", lastName: "", email: "", password: "" });
+
+	const onChangeForm = (e) => {
+		setForm((form) => {
+			return { ...form, [e.target.name]: e.target.value };
+		});
+	};
+
+	const signupHandler = (e) => {
+		e.preventDefault();
+
+		toast.promise(signup(form), {
+			pending: "Please wait...",
+			success: {
+				render() {
+					setTimeout(() => {
+						router.push("/login");
+					}, 3000);
+					return "Successfully signed up";
+				},
+			},
+			error: {
+				render({ data }) {
+					return data["response"]["data"]["msg"];
+				},
+			},
+		});
+	};
 
 	return (
 		<div className="container">
@@ -25,12 +60,16 @@ export default function SignUp() {
 					</div>
 					<div className="form-wrapper flex flex-col gap-y-5">
 						<form className="flex flex-col gap-y-10">
-							{/* //TODO: when error the icon and input border became fazzpay-error otherwise fazzpay-primary */}
 							<div className="relative w-full ease-in-out transition-all duration-300">
 								<input
 									type="text"
+									name="firstName"
+									value={form.firstName}
+									onChange={onChangeForm}
 									placeholder="Enter your firstname"
-									className="placeholder:text-[#A9A9A9CC] text-fazzpay-dark border-b-[1.5px] border-[#A9A9A999] hover:border-gray-400 focus:outline-none appearance-none bg-transparent rounded-none h-10 pl-10 w-full"
+									className={`placeholder:text-[#A9A9A9CC] text-fazzpay-dark border-b-[1.5px] ${
+										form.firstName ? "border-fazzpay-primary" : "border-[#A9A9A999]"
+									} hover:border-gray-400 focus:outline-none appearance-none bg-transparent rounded-none h-10 pl-10 w-full`}
 								/>
 								<svg
 									width="24"
@@ -38,7 +77,9 @@ export default function SignUp() {
 									viewBox="0 0 24 24"
 									fill="none"
 									xmlns="http://www.w3.org/2000/svg"
-                  className="absolute top-[6px] h-6 stroke-[#A9A9A9CC]"
+									className={`absolute top-[6px] h-6 ${
+										form.firstName ? "stroke-fazzpay-primary" : "stroke-[#A9A9A9CC]"
+									}`}
 								>
 									<path
 										d="M4 20C4 17 8 17 10 15C11 14 8 14 8 9C8 5.667 9.333 4 12 4C14.667 4 16 5.667 16 9C16 14 13 14 14 15C16 17 20 17 20 20"
@@ -49,11 +90,16 @@ export default function SignUp() {
 									/>
 								</svg>
 							</div>
-              <div className="relative w-full ease-in-out transition-all duration-300">
+							<div className="relative w-full ease-in-out transition-all duration-300">
 								<input
 									type="text"
+									name="lastName"
+									value={form.lastName}
+									onChange={onChangeForm}
 									placeholder="Enter your lastname"
-									className="placeholder:text-[#A9A9A9CC] text-fazzpay-dark border-b-[1.5px] border-[#A9A9A999] hover:border-gray-400 focus:outline-none appearance-none bg-transparent rounded-none h-10 pl-10 w-full"
+									className={`placeholder:text-[#A9A9A9CC] text-fazzpay-dark border-b-[1.5px] ${
+										form.lastName ? "border-fazzpay-primary" : "border-[#A9A9A999]"
+									} hover:border-gray-400 focus:outline-none appearance-none bg-transparent rounded-none h-10 pl-10 w-full`}
 								/>
 								<svg
 									width="24"
@@ -61,7 +107,9 @@ export default function SignUp() {
 									viewBox="0 0 24 24"
 									fill="none"
 									xmlns="http://www.w3.org/2000/svg"
-                  className="absolute top-[6px] h-6 stroke-[#A9A9A9CC]"
+									className={`absolute top-[6px] h-6 ${
+										form.lastName ? "stroke-fazzpay-primary" : "stroke-[#A9A9A9CC]"
+									}`}
 								>
 									<path
 										d="M4 20C4 17 8 17 10 15C11 14 8 14 8 9C8 5.667 9.333 4 12 4C14.667 4 16 5.667 16 9C16 14 13 14 14 15C16 17 20 17 20 20"
@@ -75,8 +123,13 @@ export default function SignUp() {
 							<div className="relative w-full ease-in-out transition-all duration-300">
 								<input
 									type="email"
+									name="email"
+									value={form.email}
+									onChange={onChangeForm}
 									placeholder="Enter your e-mail"
-									className="placeholder:text-[#A9A9A9CC] text-fazzpay-dark border-b-[1.5px] border-[#A9A9A999] hover:border-gray-400 focus:outline-none appearance-none bg-transparent rounded-none h-10 pl-10 w-full"
+									className={`placeholder:text-[#A9A9A9CC] text-fazzpay-dark border-b-[1.5px] ${
+										form.email ? "border-fazzpay-primary" : "border-[#A9A9A999]"
+									} hover:border-gray-400 focus:outline-none appearance-none bg-transparent rounded-none h-10 pl-10 w-full`}
 								/>
 								<svg
 									width="24"
@@ -84,7 +137,9 @@ export default function SignUp() {
 									viewBox="0 0 24 24"
 									fill="none"
 									xmlns="http://www.w3.org/2000/svg"
-									className="absolute top-[6px] h-6 stroke-[#A9A9A9CC]"
+									className={`absolute top-[6px] h-6 ${
+										form.email ? "stroke-fazzpay-primary" : "stroke-[#A9A9A9CC]"
+									}`}
 								>
 									<path
 										d="M22 5H2V19H22V5Z"
@@ -105,8 +160,13 @@ export default function SignUp() {
 							<div className="relative w-full ease-in-out transition-all duration-300">
 								<input
 									type={visible ? "text" : "password"}
+									name="password"
+									value={form.password}
+									onChange={onChangeForm}
 									placeholder="Create your password"
-									className="placeholder:text-[#A9A9A9CC] text-fazzpay-dark border-b-[1.5px] border-[#A9A9A999] hover:border-gray-400 focus:outline-none appearance-none bg-transparent rounded-none h-10 pl-10 w-full"
+									className={`placeholder:text-[#A9A9A9CC] text-fazzpay-dark border-b-[1.5px] ${
+										form.password ? "border-fazzpay-primary" : "border-[#A9A9A999]"
+									} hover:border-gray-400 focus:outline-none appearance-none bg-transparent rounded-none h-10 pl-10 w-full`}
 								/>
 								{visible ? (
 									<svg
@@ -142,7 +202,9 @@ export default function SignUp() {
 									viewBox="0 0 24 24"
 									fill="none"
 									xmlns="http://www.w3.org/2000/svg"
-									className="absolute top-[6px] h-6 stroke-[#A9A9A9CC]"
+									className={`absolute top-[6px] h-6 ${
+										form.password ? "stroke-fazzpay-primary" : "stroke-[#A9A9A9CC]"
+									}`}
 								>
 									<path
 										d="M19 11H5V21H19V11Z"
@@ -162,8 +224,11 @@ export default function SignUp() {
 							</div>
 						</form>
 						<div className="signup-button pt-10">
-							{/* //TODO: if all input fields are filled then the text became fazzpay-secondary and the background became fazzpay-primary */}
-							<button className="btn normal-case border-none w-full bg-[#DADADA] text-[#88888F]">
+							<button
+								disabled={!form.firstName || !form.lastName || !form.email || !form.password}
+								onClick={signupHandler}
+								className="btn normal-case w-full border-transparent text-fazzpay-secondary bg-fazzpay-primary hover:text-fazzpay-primary hover:bg-fazzpay-secondary disabled:bg-[#DADADA] disabled:text-[#88888F]"
+							>
 								Signup
 							</button>
 						</div>
@@ -176,6 +241,7 @@ export default function SignUp() {
 					</div>
 				</div>
 			</div>
+			<ToastContainer position="top-right" autoClose={3000} transition={Flip} theme="colored" />
 		</div>
 	);
 }
