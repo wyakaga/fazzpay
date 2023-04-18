@@ -7,3 +7,9 @@ export const updatePin = (pin, userId, token) => {
   const body = { pin }
 	return axios.patch(url, body, { headers: { Authorization: `Bearer ${token}` } });
 };
+
+export const getDataById = (userId, token) => {
+	const url = `${baseUrl}/user/profile/${userId}`
+	const config = { headers: { Authorization: `Bearer ${token}` } }
+	return axios.get(url, config)
+};
