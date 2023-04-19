@@ -1,6 +1,6 @@
 import Chart from "chart.js/auto";
 import React, { useEffect, useRef, useState } from "react";
-import Cookies from "js-cookie";
+import { useSelector } from "react-redux";
 
 import { getData } from "@/utils/https/transaction";
 
@@ -11,8 +11,8 @@ function BarChart() {
 	const [listIncome, setListIncome] = useState([]);
 	const [listExpense, setListExpense] = useState([]);
 
-	const userId = Cookies.get("userId");
-	const token = Cookies.get("userToken");
+	const userId = useSelector((state) => state.auth.data.id);
+	const token = useSelector((state) => state.auth.data.token);
 
 	useEffect(() => {
 		getData(userId, token).then((res) => {

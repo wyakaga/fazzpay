@@ -1,15 +1,17 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
-import Cookies from "js-cookie";
+import { useDispatch } from "react-redux";
 import { toast, ToastContainer, Flip } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import { login } from "@/utils/https/auth";
+import { authAction } from "@/redux/slices/auth";
 
 import AuthLeft from "@/components/AuthLeft";
 
 export default function Login() {
+	const dispatch = useDispatch();
 	const router = useRouter();
 
 	const navigate = (to) => router.push(to);
@@ -43,10 +45,11 @@ export default function Login() {
 			pending: "Please wait...",
 			success: {
 				render({ data }) {
-					Cookies.set("userId", data["data"]["data"]["id"]);
-					Cookies.set("userPin", data["data"]["data"]["pin"]);
-					Cookies.set("userToken", data["data"]["data"]["token"]);
-					Cookies.get("userPin") ? navigateHome() : navigateCreatePin();
+					dispatch(authAction.save(data["data"]["data"]));
+
+					const pin = data["data"]["data"]["pin"];
+					pin !== null || pin !== undefined || pin !== "" ? navigateHome() : navigateCreatePin();
+
 					return "Successfully logged in";
 				},
 			},
@@ -144,7 +147,7 @@ export default function Login() {
 										width="16"
 										height="16"
 										fill="currentColor"
-										class="bi bi-eye-slash fill-[#A9A9A9CC] cursor-pointer h-6 w-6 absolute top-[6px] right-[10px]"
+										className="bi bi-eye-slash fill-[#A9A9A9CC] cursor-pointer h-6 w-6 absolute top-[6px] right-[10px]"
 										viewBox="0 0 16 16"
 										onClick={() => setVisible(!visible)}
 									>
@@ -158,7 +161,7 @@ export default function Login() {
 										width="16"
 										height="16"
 										fill="currentColor"
-										class="bi bi-eye fill-[#A9A9A9CC] cursor-pointer h-6 w-6 absolute top-[6px] right-[10px]"
+										className="bi bi-eye fill-[#A9A9A9CC] cursor-pointer h-6 w-6 absolute top-[6px] right-[10px]"
 										viewBox="0 0 16 16"
 										onClick={() => setVisible(!visible)}
 									>

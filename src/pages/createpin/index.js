@@ -1,16 +1,19 @@
 import AuthLeft from "@/components/AuthLeft";
 import { useState } from "react";
-import Cookies from "js-cookie";
+import { useSelector } from "react-redux";
+import { useRouter } from "next/router";
 import { toast, ToastContainer, Flip } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import { updatePin } from "@/utils/https/user";
-import { useRouter } from "next/router";
 
 export default function CreatePin() {
 	const router = useRouter();
 
 	const [pins, setPins] = useState({ pin1: "", pin2: "", pin3: "", pin4: "", pin5: "", pin6: "" });
+
+	const userId = useSelector((state) => state.auth.data.id);
+	const token = useSelector((state) => state.auth.data.token);
 
 	const onChangePin = (e) => {
 		setPins((pins) => {
@@ -21,9 +24,6 @@ export default function CreatePin() {
 	const createPinHandler = (e) => {
 		e.preventDefault();
 
-		const userId = Cookies.get("userId");
-		const token = Cookies.get("userToken");
-
 		let arrayPin = Object.keys(pins).map((key) => pins[key]);
 		const intPin = parseInt(arrayPin.join(""));
 
@@ -31,7 +31,6 @@ export default function CreatePin() {
 			pending: "Please wait",
 			success: {
 				render() {
-					Cookies.set("userPin", intPin);
 					setTimeout(() => {
 						router.push("/home");
 					}, 3000);

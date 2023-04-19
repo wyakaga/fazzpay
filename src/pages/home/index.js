@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import Cookies from "js-cookie";
+import { useSelector } from "react-redux";
 
 import { getData } from "@/utils/https/transaction";
 import { getDataById } from "@/utils/https/user";
@@ -21,8 +21,8 @@ export default function Home() {
 	const [balance, setBalance] = useState(null);
 	const [phoneNumber, setPhoneNumber] = useState("");
 
-	const userId = Cookies.get("userId");
-	const token = Cookies.get("userToken");
+	const userId = useSelector((state) => state.auth.data.id);
+	const token = useSelector((state) => state.auth.data.token);
 
 	useEffect(() => {
 		getData(userId, token)
