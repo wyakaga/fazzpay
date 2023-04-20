@@ -31,3 +31,9 @@ export const resetPwd = (keysChangePassword, newPassword, confirmPassword) => {
 	};
 	return axios.patch(url, body);
 };
+
+export const logout = (token) => {
+	const url = `${baseUrl}/auth/logout`;
+	const config = { headers: { Authorization: `Bearer ${token}` } };
+	return axios.post(url, null, config);
+}
