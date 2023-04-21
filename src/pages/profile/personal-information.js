@@ -6,6 +6,7 @@ import { getDataById } from "@/utils/https/user";
 
 import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
+import Layout from "@/components/Layout";
 
 export default function PersonalInformation() {
 	const userId = useSelector((state) => state.auth.data.id);
@@ -27,65 +28,67 @@ export default function PersonalInformation() {
 
 	return (
 		<>
-			<Header />
-			<div className="container">
-				<div className="flex gap-x-6 py-40 px-5 md:px-28 bg-[#fafcff]">
-					{/* left side start */}
-					<Sidebar />
-					{/* left side end */}
-					{/* right side start */}
-					<section className="main-content font-nunitoSans w-full lg:w-3/4 flex flex-col gap-y-10 bg-fazzpay-secondary rounded-3xl shadow-[0px_4px_20px_rgba(0,0,0,0.5)] p-10">
-						<section className="top flex flex-col gap-y-4">
-							<div>
-								<p className="font-bold text-lg text-fazzpay-dark">Personal Information</p>
-							</div>
-							<div>
-								<p className="text-[#7A7886]">
-									We got your personal information from the sign <br /> up process. If you want to
-									make changes on <br /> your information, contact our support.
-								</p>
-							</div>
-						</section>
-						<section className="bottom flex flex-col justify-between gap-y-8 ">
-							<div className="flex flex-col bg-fazzpay-secondary rounded-[0.625rem] py-2 px-6 shadow-[0px_4px_20px_rgba(0,0,0,0.3)] gap-y-2">
-								<p className="text-[#7A7886]">First Name</p>
-								<p className="font-bold text-[1.375rem] text-[#514F5B]">
-									{firstName ? firstName : "Anonymous"}
-								</p>
-							</div>
-							<div className="flex flex-col bg-fazzpay-secondary rounded-[0.625rem] py-2 px-6 shadow-[0px_4px_20px_rgba(0,0,0,0.3)] gap-y-2">
-								<p className="text-[#7A7886]">Last Name</p>
-								<p className="font-bold text-[1.375rem] text-[#514F5B]">
-									{lastName ? lastName : "Anonymous"}
-								</p>
-							</div>
-							<div className="flex flex-col bg-fazzpay-secondary rounded-[0.625rem] py-2 px-6 shadow-[0px_4px_20px_rgba(0,0,0,0.3)] gap-y-2">
-								<p className="text-[#7A7886]">Verified E-mail</p>
-								<p className="font-bold text-[1.375rem] text-[#7A7886]">
-									{email ? email : "anon@anon.com"}
-								</p>
-							</div>
-							<div className="flex items-center justify-between bg-fazzpay-secondary rounded-[0.625rem] py-2 px-6 shadow-[0px_4px_20px_rgba(0,0,0,0.3)]">
-								<div className="flex flex-col gap-y-2">
-									<p className="text-[#7A7886]">Phone Number</p>
-									<p className="font-bold text-[1.375rem] text-[#514F5B]">
-										{phoneNumber ? phoneNumber : "+62 813-9387-7946"}
-									</p>
+			<Layout title={"Your personal information"}>
+				<Header />
+				<div className="container">
+					<div className="flex gap-x-6 py-40 px-5 md:px-28 bg-[#fafcff]">
+						{/* left side start */}
+						<Sidebar />
+						{/* left side end */}
+						{/* right side start */}
+						<section className="main-content font-nunitoSans w-full lg:w-3/4 flex flex-col gap-y-10 bg-fazzpay-secondary rounded-3xl shadow-[0px_4px_20px_rgba(0,0,0,0.5)] p-10">
+							<section className="top flex flex-col gap-y-4">
+								<div>
+									<p className="font-bold text-lg text-fazzpay-dark">Personal Information</p>
 								</div>
 								<div>
-									<Link
-										href={"/profile/update-phone"}
-										className="font-semibold text-fazzpay-primary cursor-pointer"
-									>
-										Manage
-									</Link>
+									<p className="text-[#7A7886]">
+										We got your personal information from the sign <br /> up process. If you want to
+										make changes on <br /> your information, contact our support.
+									</p>
 								</div>
-							</div>
+							</section>
+							<section className="bottom flex flex-col justify-between gap-y-8 ">
+								<div className="flex flex-col bg-fazzpay-secondary rounded-[0.625rem] py-2 px-6 shadow-[0px_4px_20px_rgba(0,0,0,0.3)] gap-y-2">
+									<p className="text-[#7A7886]">First Name</p>
+									<p className="font-bold text-[1.375rem] text-[#514F5B]">
+										{firstName ? firstName : "Anonymous"}
+									</p>
+								</div>
+								<div className="flex flex-col bg-fazzpay-secondary rounded-[0.625rem] py-2 px-6 shadow-[0px_4px_20px_rgba(0,0,0,0.3)] gap-y-2">
+									<p className="text-[#7A7886]">Last Name</p>
+									<p className="font-bold text-[1.375rem] text-[#514F5B]">
+										{lastName ? lastName : "Anonymous"}
+									</p>
+								</div>
+								<div className="flex flex-col bg-fazzpay-secondary rounded-[0.625rem] py-2 px-6 shadow-[0px_4px_20px_rgba(0,0,0,0.3)] gap-y-2">
+									<p className="text-[#7A7886]">Verified E-mail</p>
+									<p className="font-bold text-[1.375rem] text-[#7A7886]">
+										{email ? email : "anon@anon.com"}
+									</p>
+								</div>
+								<div className="flex items-center justify-between bg-fazzpay-secondary rounded-[0.625rem] py-2 px-6 shadow-[0px_4px_20px_rgba(0,0,0,0.3)]">
+									<div className="flex flex-col gap-y-2">
+										<p className="text-[#7A7886]">Phone Number</p>
+										<p className="font-bold text-[1.375rem] text-[#514F5B]">
+											{phoneNumber ? phoneNumber : "+62 813-9387-7946"}
+										</p>
+									</div>
+									<div>
+										<Link
+											href={"/profile/update-phone"}
+											className="font-semibold text-fazzpay-primary cursor-pointer"
+										>
+											Manage
+										</Link>
+									</div>
+								</div>
+							</section>
 						</section>
-					</section>
-					{/* right side end */}
+						{/* right side end */}
+					</div>
 				</div>
-			</div>
+			</Layout>
 		</>
 	);
 }

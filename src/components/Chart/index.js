@@ -37,12 +37,12 @@ function BarChart() {
 					datasets: [
 						{
 							label: "Income per day",
-							data: incomeData,
+							data: listIncome && incomeData,
 							backgroundColor: "#1ec15f",
 						},
 						{
 							label: "Expense per day",
-							data: expenseData,
+							data: listExpense && expenseData,
 							backgroundColor: "#ff8469",
 						},
 					],

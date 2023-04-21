@@ -2,10 +2,10 @@ import AuthLeft from "@/components/AuthLeft";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { useRouter } from "next/router";
-import { toast, ToastContainer, Flip } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 
 import { updatePin } from "@/utils/https/user";
+import Layout from "@/components/Layout";
 
 export default function CreatePin() {
 	const router = useRouter();
@@ -31,9 +31,7 @@ export default function CreatePin() {
 			pending: "Please wait",
 			success: {
 				render() {
-					setTimeout(() => {
 						router.push("/home");
-					}, 3000);
 					return "Succesfully created pin";
 				},
 			},
@@ -46,137 +44,138 @@ export default function CreatePin() {
 	};
 
 	return (
-		<div className="container">
-			<div className="flex">
-				<AuthLeft />
-				<div className="lg:w-5/12 font-nunitoSans p-20 flex flex-col gap-y-20">
-					<div className="title lg:hidden flex justify-center">
-						<p className="font-bold text-3xl text-fazzpay-primary">FazzPay</p>
-					</div>
-					<div className="form-title flex flex-col gap-y-10">
-						<p className="font-bold text-2xl text-fazzpay-dark">
-							Secure Your Account, Your Wallet, and Your Data With 6 Digits PIN That You Created
-							Yourself.
-						</p>
-						<p className="text-fazzpay-dark/60">
-							Create 6 digits pin to secure all your money and your data in FazzPay app. Keep it
-							secret and don’t tell anyone about your FazzPay account password and the PIN.
-						</p>
-					</div>
-					<div className="form-wrapper flex flex-col gap-y-20">
-						<div className="flex justify-center items-center gap-3 md:gap-6">
-							<div
-								className={`w-10 md:w-12 lg:w-14 h-12 md:h-14 lg:h-16 flex justify-center items-center ${
-									pins.pin1 ? "border-fazzpay-primary" : "border-fazzpay-accent"
-								} border border-solid rounded-lg`}
-							>
-								<input
-									type="text"
-									name="pin1"
-									value={pins.pin1}
-									onChange={onChangePin}
-									maxLength={1}
-									className={`w-3/4 h-3/4 text-center outline-none border-b border-solid ${
-										pins.pin1 ? "border-b-transparent" : "border-b-fazzpay-accent"
-									} text-base md:text-3xl font-bold`}
-								/>
-							</div>
-							<div
-								className={`w-10 md:w-12 lg:w-14 h-12 md:h-14 lg:h-16 flex justify-center items-center ${
-									pins.pin2 ? "border-fazzpay-primary" : "border-fazzpay-accent"
-								} border border-solid rounded-lg`}
-							>
-								<input
-									type="text"
-									name="pin2"
-									value={pins.pin2}
-									onChange={onChangePin}
-									maxLength={1}
-									className={`w-3/4 h-3/4 text-center outline-none border-b border-solid ${
-										pins.pin2 ? "border-b-transparent" : "border-b-fazzpay-accent"
-									} text-base md:text-3xl font-bold`}
-								/>
-							</div>
-							<div
-								className={`w-10 md:w-12 lg:w-14 h-12 md:h-14 lg:h-16 flex justify-center items-center ${
-									pins.pin3 ? "border-fazzpay-primary" : "border-fazzpay-accent"
-								} border border-solid rounded-lg`}
-							>
-								<input
-									type="text"
-									name="pin3"
-									value={pins.pin3}
-									onChange={onChangePin}
-									maxLength={1}
-									className={`w-3/4 h-3/4 text-center outline-none border-b border-solid ${
-										pins.pin3 ? "border-b-transparent" : "border-b-fazzpay-accent"
-									} text-base md:text-3xl font-bold`}
-								/>
-							</div>
-							<div
-								className={`w-10 md:w-12 lg:w-14 h-12 md:h-14 lg:h-16 flex justify-center items-center ${
-									pins.pin4 ? "border-fazzpay-primary" : "border-fazzpay-accent"
-								} border border-solid rounded-lg`}
-							>
-								<input
-									type="text"
-									name="pin4"
-									value={pins.pin4}
-									onChange={onChangePin}
-									maxLength={1}
-									className={`w-3/4 h-3/4 text-center outline-none border-b border-solid ${
-										pins.pin4 ? "border-b-transparent" : "border-b-fazzpay-accent"
-									} text-base md:text-3xl font-bold`}
-								/>
-							</div>
-							<div
-								className={`w-10 md:w-12 lg:w-14 h-12 md:h-14 lg:h-16 flex justify-center items-center ${
-									pins.pin5 ? "border-fazzpay-primary" : "border-fazzpay-accent"
-								} border border-solid rounded-lg`}
-							>
-								<input
-									type="text"
-									name="pin5"
-									value={pins.pin5}
-									onChange={onChangePin}
-									maxLength={1}
-									className={`w-3/4 h-3/4 text-center outline-none border-b border-solid ${
-										pins.pin5 ? "border-b-transparent" : "border-b-fazzpay-accent"
-									} text-base md:text-3xl font-bold`}
-								/>
-							</div>
-							<div
-								className={`w-10 md:w-12 lg:w-14 h-12 md:h-14 lg:h-16 flex justify-center items-center ${
-									pins.pin6 ? "border-fazzpay-primary" : "border-fazzpay-accent"
-								} border border-solid rounded-lg`}
-							>
-								<input
-									type="text"
-									name="pin6"
-									value={pins.pin6}
-									onChange={onChangePin}
-									maxLength={1}
-									className={`w-3/4 h-3/4 text-center outline-none border-b border-solid ${
-										pins.pin6 ? "border-b-transparent" : "border-b-fazzpay-accent"
-									} text-base md:text-3xl font-bold`}
-								/>
-							</div>
+		<Layout title={"Create PIN"}>
+			<div className="container">
+				<div className="flex">
+					<AuthLeft />
+					<div className="lg:w-5/12 font-nunitoSans p-20 flex flex-col gap-y-20">
+						<div className="title lg:hidden flex justify-center">
+							<p className="font-bold text-3xl text-fazzpay-primary">FazzPay</p>
 						</div>
-						<div className="confirm-button pt-10">
-							<button
-								disabled={
-									!pins.pin1 || !pins.pin2 || !pins.pin3 || !pins.pin4 || !pins.pin5 || !pins.pin6
-								}
-								onClick={createPinHandler}
-								className="btn normal-case border-transparent w-full bg-fazzpay-primary text-fazzpay-secondary hover:bg-fazzpay-secondary hover:text-fazzpay-primary disabled:bg-[#DADADA] disabled:text-[#88888F]"
-							>
-								Confirm
-							</button>
+						<div className="form-title flex flex-col gap-y-10">
+							<p className="font-bold text-2xl text-fazzpay-dark">
+								Secure Your Account, Your Wallet, and Your Data With 6 Digits PIN That You Created
+								Yourself.
+							</p>
+							<p className="text-fazzpay-dark/60">
+								Create 6 digits pin to secure all your money and your data in FazzPay app. Keep it
+								secret and don’t tell anyone about your FazzPay account password and the PIN.
+							</p>
+						</div>
+						<div className="form-wrapper flex flex-col gap-y-20">
+							<div className="flex justify-center items-center gap-3 md:gap-6">
+								<div
+									className={`w-10 md:w-12 lg:w-14 h-12 md:h-14 lg:h-16 flex justify-center items-center ${
+										pins.pin1 ? "border-fazzpay-primary" : "border-fazzpay-accent"
+									} border border-solid rounded-lg`}
+								>
+									<input
+										type="text"
+										name="pin1"
+										value={pins.pin1}
+										onChange={onChangePin}
+										maxLength={1}
+										className={`w-3/4 h-3/4 text-center outline-none border-b border-solid ${
+											pins.pin1 ? "border-b-transparent" : "border-b-fazzpay-accent"
+										} text-base md:text-3xl font-bold`}
+									/>
+								</div>
+								<div
+									className={`w-10 md:w-12 lg:w-14 h-12 md:h-14 lg:h-16 flex justify-center items-center ${
+										pins.pin2 ? "border-fazzpay-primary" : "border-fazzpay-accent"
+									} border border-solid rounded-lg`}
+								>
+									<input
+										type="text"
+										name="pin2"
+										value={pins.pin2}
+										onChange={onChangePin}
+										maxLength={1}
+										className={`w-3/4 h-3/4 text-center outline-none border-b border-solid ${
+											pins.pin2 ? "border-b-transparent" : "border-b-fazzpay-accent"
+										} text-base md:text-3xl font-bold`}
+									/>
+								</div>
+								<div
+									className={`w-10 md:w-12 lg:w-14 h-12 md:h-14 lg:h-16 flex justify-center items-center ${
+										pins.pin3 ? "border-fazzpay-primary" : "border-fazzpay-accent"
+									} border border-solid rounded-lg`}
+								>
+									<input
+										type="text"
+										name="pin3"
+										value={pins.pin3}
+										onChange={onChangePin}
+										maxLength={1}
+										className={`w-3/4 h-3/4 text-center outline-none border-b border-solid ${
+											pins.pin3 ? "border-b-transparent" : "border-b-fazzpay-accent"
+										} text-base md:text-3xl font-bold`}
+									/>
+								</div>
+								<div
+									className={`w-10 md:w-12 lg:w-14 h-12 md:h-14 lg:h-16 flex justify-center items-center ${
+										pins.pin4 ? "border-fazzpay-primary" : "border-fazzpay-accent"
+									} border border-solid rounded-lg`}
+								>
+									<input
+										type="text"
+										name="pin4"
+										value={pins.pin4}
+										onChange={onChangePin}
+										maxLength={1}
+										className={`w-3/4 h-3/4 text-center outline-none border-b border-solid ${
+											pins.pin4 ? "border-b-transparent" : "border-b-fazzpay-accent"
+										} text-base md:text-3xl font-bold`}
+									/>
+								</div>
+								<div
+									className={`w-10 md:w-12 lg:w-14 h-12 md:h-14 lg:h-16 flex justify-center items-center ${
+										pins.pin5 ? "border-fazzpay-primary" : "border-fazzpay-accent"
+									} border border-solid rounded-lg`}
+								>
+									<input
+										type="text"
+										name="pin5"
+										value={pins.pin5}
+										onChange={onChangePin}
+										maxLength={1}
+										className={`w-3/4 h-3/4 text-center outline-none border-b border-solid ${
+											pins.pin5 ? "border-b-transparent" : "border-b-fazzpay-accent"
+										} text-base md:text-3xl font-bold`}
+									/>
+								</div>
+								<div
+									className={`w-10 md:w-12 lg:w-14 h-12 md:h-14 lg:h-16 flex justify-center items-center ${
+										pins.pin6 ? "border-fazzpay-primary" : "border-fazzpay-accent"
+									} border border-solid rounded-lg`}
+								>
+									<input
+										type="text"
+										name="pin6"
+										value={pins.pin6}
+										onChange={onChangePin}
+										maxLength={1}
+										className={`w-3/4 h-3/4 text-center outline-none border-b border-solid ${
+											pins.pin6 ? "border-b-transparent" : "border-b-fazzpay-accent"
+										} text-base md:text-3xl font-bold`}
+									/>
+								</div>
+							</div>
+							<div className="confirm-button pt-10">
+								<button
+									disabled={
+										!pins.pin1 || !pins.pin2 || !pins.pin3 || !pins.pin4 || !pins.pin5 || !pins.pin6
+									}
+									onClick={createPinHandler}
+									className="btn normal-case border-transparent w-full bg-fazzpay-primary text-fazzpay-secondary hover:bg-fazzpay-secondary hover:text-fazzpay-primary disabled:bg-[#DADADA] disabled:text-[#88888F]"
+								>
+									Confirm
+								</button>
+							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-			<ToastContainer position="top-right" autoClose={3000} transition={Flip} theme="colored" />
-		</div>
+		</Layout>
 	);
 }
