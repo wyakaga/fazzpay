@@ -1,9 +1,89 @@
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { Dialog } from "@headlessui/react";
+import { toast } from "react-toastify";
+
+import { topUp } from "@/utils/https/transaction";
+
 export default function Sidebar() {
+	const router = useRouter();
+	const currentRoute = router.pathname;
+	const style = {
+		active: "text-fazzpay-primary font-bold border-l-[5px] border-l-fazzpay-primary",
+		inactive: "text-fazzpay-dark/80",
+	};
+	const token = useSelector((state) => state.auth.data.token);
+
+	const [isHomeActive, setIsHomeActive] = useState(false);
+	const [isTopUpActive, setIsTopUpActive] = useState(false);
+	const [isProfileActive, setIsProfileActive] = useState(false);
+	const [amount, setAmount] = useState("");
+
+	useEffect(() => {
+		if (currentRoute === "/home") setIsHomeActive(true);
+		if (currentRoute === "/profile") setIsProfileActive(true);
+	}, [currentRoute]);
+
+	const toHomeHandler = () => {
+		router.push("/home");
+		setIsHomeActive(true);
+	};
+
+	const toTopUpHandler = () => {
+		setIsTopUpActive(true);
+		setIsHomeActive(false);
+		setIsProfileActive(false);
+	};
+
+	const topUpCloseHandler = () => {
+		setIsTopUpActive(false);
+		if (currentRoute === "/home") setIsHomeActive(true);
+		if (currentRoute === "/profile") setIsProfileActive(true);
+	};
+
+	const toProfileHandler = () => {
+		router.push("/profile");
+		setIsProfileActive(true);
+	};
+
+	const onAmountChange = (e) => {
+		setAmount(e.target.value);
+	};
+
+	const topUpHandler = (e) => {
+		e.preventDefault();
+
+		toast.promise(topUp(amount, token), {
+			pending: "Please wait...",
+			success: {
+				render({ data }) {
+					setAmount("");
+					const redirectUrl = data["data"]["data"]["redirectUrl"];
+					setTimeout(() => {
+						if (redirectUrl) router.push(redirectUrl);
+					}, 3000);
+					return "Top up success!";
+				},
+			},
+			error: {
+				render({ data }) {
+					return data["response"]["data"]["msg"];
+				},
+			},
+		});
+	};
+
 	return (
 		<section className="nav-sidebar hidden lg:w-1/4 font-nunitoSans lg:grid grid-rows-2 bg-fazzpay-secondary rounded-[25px] shadow-[0px_4px_20px_rgba(0,0,0,0.5)] py-10 ">
 			{/* //TODO: If tabs are active the style same as the hovered one */}
 			<section className="top flex flex-col gap-y-10">
-				<div className="dashboard flex gap-x-5 items-center cursor-pointer text-fazzpay-dark/80 hover:text-fazzpay-primary hover:font-bold hover:border-l-[5px] hover:border-l-fazzpay-primary">
+				<div
+					onClick={() => toHomeHandler()}
+					className={`dashboard flex gap-x-5 items-center cursor-pointer ${
+						isHomeActive === true ? style.active : style.inactive
+					} hover:text-fazzpay-primary hover:font-bold hover:border-l-[5px] hover:border-l-fazzpay-primary`}
+				>
 					<div className="tab-icon pl-10">
 						<svg
 							width="28"
@@ -73,7 +153,12 @@ export default function Sidebar() {
 					</div>
 					<div className="tab-title text-lg text-current">Transfer</div>
 				</div>
-				<div className="top-up flex gap-x-5 items-center cursor-pointer text-fazzpay-dark/80 hover:text-fazzpay-primary hover:font-bold hover:border-l-[5px] hover:border-l-fazzpay-primary">
+				<div
+					onClick={() => toTopUpHandler()}
+					className={`top-up flex gap-x-5 items-center cursor-pointer ${
+						isTopUpActive === true ? style.active : style.inactive
+					} hover:text-fazzpay-primary hover:font-bold hover:border-l-[5px] hover:border-l-fazzpay-primary`}
+				>
 					<div className="tab-icon pl-10">
 						<svg
 							width="28"
@@ -101,7 +186,12 @@ export default function Sidebar() {
 					</div>
 					<div className="tab-title text-lg text-current">Top Up</div>
 				</div>
-				<div className="profile flex gap-x-5 items-center cursor-pointer text-fazzpay-dark/80 hover:text-fazzpay-primary hover:font-bold hover:border-l-[5px] hover:border-l-fazzpay-primary">
+				<div
+					onClick={() => toProfileHandler()}
+					className={`profile flex gap-x-5 items-center cursor-pointer ${
+						isProfileActive === true ? style.active : style.inactive
+					} hover:text-fazzpay-primary hover:font-bold hover:border-l-[5px] hover:border-l-fazzpay-primary`}
+				>
 					<div className="tab-icon pl-10">
 						<svg
 							width="28"
@@ -167,6 +257,55 @@ export default function Sidebar() {
 					<div className="tab-title text-lg text-current">Logout</div>
 				</div>
 			</section>
+			<Dialog
+				open={isTopUpActive}
+				onClose={topUpCloseHandler}
+				className="fixed z-10 bg-black/70 inset-0 overflow-y-auto"
+			>
+				<div className="flex items-center justify-center min-h-screen px-4 md:px-0">
+					<div className="bg-fazzpay-secondary w-full md:w-1/2 lg:w-1/3 p-5 rounded-lg shadow-lg z-20">
+						<div className="flex flex-col gap-y-10">
+							<div className="flex flex-col gap-y-5">
+								<div className="flex items-center justify-between">
+									<p className="font-bold text-2xl text-fazzpay-dark">Topup</p>
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										width="16"
+										height="16"
+										fill="currentColor"
+										onClick={() => topUpCloseHandler()}
+										className="bi bi-x-lg h-6 w-6 fill-fazzpay-dark cursor-pointer"
+										viewBox="0 0 16 16"
+									>
+										<path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z" />
+									</svg>
+								</div>
+								<p className="text-fazzpay-dark/60">
+									Enter the amount of money, and click <br /> submit
+								</p>
+							</div>
+							<div className="border border-[#A9A9A999] rounded-md flex justify-center">
+								<input
+									value={amount}
+									onChange={onAmountChange}
+									type="number"
+									className={`h-16 text-lg border-b rounded-none ${
+										amount ? "border-transparent" : "border-[#A9A9A966]"
+									} focus:outline-none appearance-none bg-transparent w-3/4 mb-2 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`}
+								/>
+							</div>
+							<div className="submit-button pt-10 flex justify-end">
+								<button
+									onClick={(e) => topUpHandler(e)}
+									className="btn normal-case w-1/4 border-transparent text-fazzpay-secondary bg-fazzpay-primary hover:text-fazzpay-primary hover:bg-fazzpay-secondary disabled:bg-[#DADADA] disabled:text-[#88888F]"
+								>
+									Submit
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</Dialog>
 		</section>
 	);
 }

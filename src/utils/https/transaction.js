@@ -7,3 +7,10 @@ export const getData = (userId, token) => {
 	const config = { headers: { Authorization: `Bearer ${token}` } };
 	return axios.get(url, config);
 };
+
+export const topUp = (amount, token) => {
+	const url = `${baseUrl}/transaction/top-up`;
+	const body = { amount };
+	const config = { headers: { Authorization: `Bearer ${token}` } };
+	return axios.post(url, body, config);
+};
