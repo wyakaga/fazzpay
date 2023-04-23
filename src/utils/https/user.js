@@ -11,7 +11,13 @@ export const updatePin = (pin, userId, token) => {
 export const checkPin = (pin, token) => {
 	const url = `${baseUrl}/user/pin/${pin}`;
 	const config = { headers: { Authorization: `Bearer ${token}` } };
-	return axios.get(url, config)
+	return axios.get(url, config);
+};
+
+export const getUsers = (page, limit, search, token) => {
+	const url = `${baseUrl}/user?page=${page}&limit=${limit}&search=${search}`;
+	const config = { headers: { Authorization: `Bearer ${token}` } };
+	return axios.get(url, config);
 };
 
 export const getDataById = (userId, token) => {

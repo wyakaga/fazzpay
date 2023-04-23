@@ -11,7 +11,7 @@ export default function NewPwd() {
 	const { query } = useRouter();
 	const router = useRouter();
 
-	const userId = query.userId;
+	const otp = query.otp;
 
 	const [visible1, setVisible1] = useState(false);
 	const [visible2, setVisible2] = useState(false);
@@ -29,7 +29,7 @@ export default function NewPwd() {
 	const resetPwdHandler = (e) => {
 		e.preventDefault();
 
-		toast.promise(resetPwd(userId, newPassword, confirmPassword), {
+		toast.promise(resetPwd(otp, newPassword, confirmPassword), {
 			pending: "Please wait...",
 			success: {
 				render() {

@@ -142,7 +142,7 @@ export default function Home() {
 									</p>
 								</div>
 								<div className="right hidden lg:flex flex-col w-1/6 gap-y-4">
-									<button className="transfer btn normal-case bg-[#8294f6] border-fazzpay-secondary hover:bg-fazzpay-primary/70 hover:border-[#B5B0ED]">
+									<button onClick={() => router.push("/transfer")} className="transfer btn normal-case bg-[#8294f6] border-fazzpay-secondary hover:bg-fazzpay-primary/70 hover:border-[#B5B0ED]">
 										<div className="flex items-center gap-x-4">
 											<svg
 												width="28"
@@ -204,7 +204,7 @@ export default function Home() {
 								</div>
 							</section>
 							<div className="buttons lg:hidden flex justify-between w-full h-20">
-								<button className="transfer w-[47%] h-full btn normal-case bg-[#8294f6] border-fazzpay-secondary hover:bg-fazzpay-primary/70 hover:border-[#B5B0ED]">
+								<button onClick={() => router.push("/transfer")} className="transfer w-[47%] h-full btn normal-case bg-[#8294f6] border-fazzpay-secondary hover:bg-fazzpay-primary/70 hover:border-[#B5B0ED]">
 									<div className="flex items-center gap-x-4">
 										<svg
 											width="28"
@@ -232,7 +232,7 @@ export default function Home() {
 										<p className="text-fazzpay-secondary font-bold text-lg">Transfer</p>
 									</div>
 								</button>
-								<button className="top-up w-[47%] h-full btn normal-case bg-[#8294f6] border-fazzpay-secondary hover:bg-fazzpay-primary/70 hover:border-[#B5B0ED]">
+								<button onClick={() => toTopUpHandler()} className="top-up w-[47%] h-full btn normal-case bg-[#8294f6] border-fazzpay-secondary hover:bg-fazzpay-primary/70 hover:border-[#B5B0ED]">
 									<div className="flex items-center gap-x-4">
 										<svg
 											width="28"

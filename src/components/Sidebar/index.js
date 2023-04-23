@@ -1,28 +1,38 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Dialog } from "@headlessui/react";
 import { toast } from "react-toastify";
 
 import { topUp } from "@/utils/https/transaction";
+import { logout } from "@/utils/https/auth";
+import { authAction } from "@/redux/slices/auth";
 
 export default function Sidebar() {
+	const dispatch = useDispatch()
+
 	const router = useRouter();
+
 	const currentRoute = router.pathname;
+
 	const style = {
 		active: "text-fazzpay-primary font-bold border-l-[5px] border-l-fazzpay-primary",
 		inactive: "text-fazzpay-dark/80",
 	};
+
 	const token = useSelector((state) => state.auth.data.token);
 
 	const [isHomeActive, setIsHomeActive] = useState(false);
+	const [isTransferActive, setIsTransferActive] = useState(false);
 	const [isTopUpActive, setIsTopUpActive] = useState(false);
 	const [isProfileActive, setIsProfileActive] = useState(false);
+	const [isLogoutActive, setIsLogoutActive] = useState(false);
 	const [amount, setAmount] = useState("");
 
 	useEffect(() => {
-		if (currentRoute === "/home") setIsHomeActive(true);
-		if (currentRoute === "/profile") setIsProfileActive(true);
+		if (currentRoute.includes("/home")) setIsHomeActive(true);
+		if (currentRoute.includes("/profile")) setIsProfileActive(true);
+		if (currentRoute.includes("/transfer")) setIsTransferActive(true);
 	}, [currentRoute]);
 
 	const toHomeHandler = () => {
@@ -30,16 +40,23 @@ export default function Sidebar() {
 		setIsHomeActive(true);
 	};
 
+	const toTransferHandler = () => {
+		router.push("/transfer");
+		setIsTransferActive(true);
+	};
+
 	const toTopUpHandler = () => {
 		setIsTopUpActive(true);
 		setIsHomeActive(false);
 		setIsProfileActive(false);
+		setIsTransferActive(false);
 	};
 
 	const topUpCloseHandler = () => {
 		setIsTopUpActive(false);
 		if (currentRoute === "/home") setIsHomeActive(true);
 		if (currentRoute === "/profile") setIsProfileActive(true);
+		if (currentRoute === "/transfer") setIsTransferActive(true);
 	};
 
 	const toProfileHandler = () => {
@@ -74,9 +91,42 @@ export default function Sidebar() {
 		});
 	};
 
+	const toLogoutHandler = () => {
+		setIsLogoutActive(true);
+		setIsHomeActive(false);
+		setIsProfileActive(false);
+		setIsTransferActive(false);
+	};
+
+	const logoutCloseHandler = () => {
+		setIsLogoutActive(false);
+		if (currentRoute === "/home") setIsHomeActive(true);
+		if (currentRoute === "/profile") setIsProfileActive(true);
+		if (currentRoute === "/transfer") setIsTransferActive(true);
+	};
+
+	const logoutHandler = (e) => {
+		e.preventDefault();
+
+		toast.promise(logout(token), {
+			pending: "Please wait...",
+			success: {
+				render() {
+					router.push("/");
+					dispatch(authAction.remove());
+					return "Succesfully logged out";
+				},
+			},
+			error: {
+				render({ data }) {
+					return data["response"]["data"]["msg"];
+				},
+			},
+		});
+	};
+
 	return (
 		<section className="nav-sidebar hidden lg:w-1/4 font-nunitoSans lg:grid grid-rows-2 bg-fazzpay-secondary rounded-[25px] shadow-[0px_4px_20px_rgba(0,0,0,0.5)] py-10 ">
-			{/* //TODO: If tabs are active the style same as the hovered one */}
 			<section className="top flex flex-col gap-y-10">
 				<div
 					onClick={() => toHomeHandler()}
@@ -125,7 +175,12 @@ export default function Sidebar() {
 					</div>
 					<div className="tab-title text-lg text-current">Dashboard</div>
 				</div>
-				<div className="transfer flex gap-x-5 items-center cursor-pointer text-fazzpay-dark/80 hover:text-fazzpay-primary hover:font-bold hover:border-l-[5px] hover:border-l-fazzpay-primary">
+				<div
+					onClick={() => toTransferHandler()}
+					className={`transfer flex gap-x-5 items-center cursor-pointer ${
+						isTransferActive === true ? style.active : style.inactive
+					} hover:text-fazzpay-primary hover:font-bold hover:border-l-[5px] hover:border-l-fazzpay-primary`}
+				>
 					<div className="tab-icon pl-10">
 						<svg
 							width="28"
@@ -221,7 +276,7 @@ export default function Sidebar() {
 				</div>
 			</section>
 			<section className="bottom flex flex-col justify-end">
-				<div className="logout flex gap-x-5 items center cursor-pointer text-fazzpay-dark/80 hover:text-fazzpay-primary hover:font-bold hover:border-l-[5px] hover:border-l-fazzpay-primary">
+				<div onClick={() => toLogoutHandler()} className={`logout flex gap-x-5 items center cursor-pointer ${isLogoutActive === true ? style.active : style.inactive} hover:text-fazzpay-primary hover:font-bold hover:border-l-[5px] hover:border-l-fazzpay-primary`}>
 					<div className="tab-icon pl-10">
 						<svg
 							width="28"
@@ -302,6 +357,33 @@ export default function Sidebar() {
 									Submit
 								</button>
 							</div>
+						</div>
+					</div>
+				</div>
+			</Dialog>
+			<Dialog
+				open={isLogoutActive}
+				onClose={logoutCloseHandler}
+				className="fixed z-10 bg-black/70 inset-0 overflow-y-auto"
+			>
+				<div className="flex items-center justify-center min-h-screen">
+					<div className="bg-fazzpay-secondary w-1/2 p-16 rounded-lg shadow-lg text-center z-20">
+						<p className="text-2xl font-bold mb-2">Are you sure?</p>
+						<div className="logout-button pt-10">
+							<button
+								onClick={logoutHandler}
+								className="btn normal-case w-full border-transparent text-fazzpay-secondary bg-fazzpay-primary hover:text-fazzpay-primary hover:bg-fazzpay-secondary disabled:bg-[#DADADA] disabled:text-[#88888F]"
+							>
+								Yes
+							</button>
+						</div>
+						<div className="cancel-button pt-10">
+							<button
+								onClick={logoutCloseHandler}
+								className="btn normal-case w-full border-transparent text-fazzpay-secondary bg-fazzpay-error hover:text-fazzpay-error hover:bg-fazzpay-secondary"
+							>
+								No
+							</button>
 						</div>
 					</div>
 				</div>

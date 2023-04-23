@@ -146,7 +146,6 @@ export default function Profile() {
 			success: {
 				render() {
 					router.push("/");
-					console.log(router.push("/"));
 					dispatch(authAction.remove());
 					return "Succesfully logged out";
 				},
