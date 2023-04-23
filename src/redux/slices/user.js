@@ -1,23 +1,17 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-	data: [],
+	phoneNumber: "",
 };
 
 const userSlice = createSlice({
 	name: "user",
 	initialState,
 	reducers: {
-		save: (prevState, action) => {
+		savePhone: (prevState, action) => {
 			return {
 				...prevState,
-				data: action.payload,
-			};
-		},
-		remove: (prevState) => {
-			return {
-				...prevState,
-				data: [],
+				phoneNumber: action.payload,
 			};
 		},
 	},

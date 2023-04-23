@@ -6,6 +6,7 @@ import { updatePhone } from "@/utils/https/user";
 
 import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
+import Footer from "@/components/Footer";
 import Layout from "@/components/Layout";
 
 export default function ChangePwd() {
@@ -111,6 +112,7 @@ export default function ChangePwd() {
 						{/* right side end */}
 					</div>
 				</div>
+				<Footer />
 			</Layout>
 		</>
 	);

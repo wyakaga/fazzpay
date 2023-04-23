@@ -21,6 +21,7 @@ export default function Sidebar() {
 	};
 
 	const token = useSelector((state) => state.auth.data.token);
+	const phoneNumber = useSelector((state) => state.user.phoneNumber);
 
 	const [isHomeActive, setIsHomeActive] = useState(false);
 	const [isTransferActive, setIsTransferActive] = useState(false);
@@ -41,12 +42,12 @@ export default function Sidebar() {
 	};
 
 	const toTransferHandler = () => {
-		router.push("/transfer");
+		phoneNumber === null ? router.push("/profile/update-phone") :	router.push("/transfer");
 		setIsTransferActive(true);
 	};
 
 	const toTopUpHandler = () => {
-		setIsTopUpActive(true);
+		phoneNumber === null ? router.push("profile/update-phone") : setIsTopUpActive(true);
 		setIsHomeActive(false);
 		setIsProfileActive(false);
 		setIsTransferActive(false);
@@ -54,9 +55,9 @@ export default function Sidebar() {
 
 	const topUpCloseHandler = () => {
 		setIsTopUpActive(false);
-		if (currentRoute === "/home") setIsHomeActive(true);
-		if (currentRoute === "/profile") setIsProfileActive(true);
-		if (currentRoute === "/transfer") setIsTransferActive(true);
+		if (currentRoute.includes("/home")) setIsHomeActive(true);
+		if (currentRoute.includes("/profile")) setIsProfileActive(true);
+		if (currentRoute.includes("/transfer")) setIsTransferActive(true);
 	};
 
 	const toProfileHandler = () => {
@@ -100,9 +101,9 @@ export default function Sidebar() {
 
 	const logoutCloseHandler = () => {
 		setIsLogoutActive(false);
-		if (currentRoute === "/home") setIsHomeActive(true);
-		if (currentRoute === "/profile") setIsProfileActive(true);
-		if (currentRoute === "/transfer") setIsTransferActive(true);
+		if (currentRoute.includes("/home")) setIsHomeActive(true);
+		if (currentRoute.includes("/profile")) setIsProfileActive(true);
+		if (currentRoute.includes("/transfer")) setIsTransferActive(true);
 	};
 
 	const logoutHandler = (e) => {

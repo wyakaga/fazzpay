@@ -6,6 +6,7 @@ import { updatePin, checkPin } from "@/utils/https/user";
 
 import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
+import Footer from "@/components/Footer";
 import Layout from "@/components/Layout";
 
 export default function ChangePin() {
@@ -214,6 +215,7 @@ export default function ChangePin() {
 						{/* right side end */}
 					</div>
 				</div>
+				<Footer />
 			</Layout>
 		</>
 	);

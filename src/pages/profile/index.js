@@ -11,6 +11,7 @@ import { authAction } from "@/redux/slices/auth";
 
 import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
+import Footer from "@/components/Footer";
 import Layout from "@/components/Layout";
 
 import defaultPic from "@/assets/img/profile-placeholder.webp";
@@ -448,6 +449,7 @@ export default function Profile() {
 						</div>
 					</Dialog>
 				</div>
+				<Footer />
 			</Layout>
 		</>
 	);

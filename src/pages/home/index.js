@@ -1,12 +1,13 @@
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Dialog } from "@headlessui/react";
 import { toast } from "react-toastify";
 
-import { getData, topUp } from "@/utils/https/transaction";
+import { getData, topUp, history } from "@/utils/https/transaction";
 import { getDataById } from "@/utils/https/user";
+import { userAction } from "@/redux/slices/user";
 
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -14,13 +15,11 @@ import Sidebar from "@/components/Sidebar";
 import Chart from "@/components/Chart";
 import Layout from "@/components/Layout";
 
-import jack from "@/assets/img/carousel1.webp";
-import rachel from "@/assets/img/carousel2.webp";
-import christine from "@/assets/img/carousel3.webp";
-import john from "@/assets/img/carousel4.webp";
+import defaultProfile from "@/assets/img/profile-placeholder.webp";
 
 export default function Home() {
 	const router = useRouter();
+	const dispatch = useDispatch();
 
 	const [totalIncome, setTotalIncome] = useState(null);
 	const [totalExpense, setTotalExpense] = useState(null);
@@ -28,9 +27,11 @@ export default function Home() {
 	const [phoneNumber, setPhoneNumber] = useState("");
 	const [isTopUpActive, setIsTopUpActive] = useState(false);
 	const [amount, setAmount] = useState("");
+	const [users, setUsers] = useState([]);
 
 	const userId = useSelector((state) => state.auth.data.id);
 	const token = useSelector((state) => state.auth.data.token);
+	const telephoneNumber = useSelector((state) => state.user.phoneNumber);
 
 	useEffect(() => {
 		getData(userId, token)
@@ -47,14 +48,26 @@ export default function Home() {
 		getDataById(userId, token).then((res) => {
 			setBalance(res["data"]["data"]["balance"]);
 			setPhoneNumber(res["data"]["data"]["noTelp"]);
+			dispatch(userAction.savePhone(res["data"]["data"]["noTelp"]));
 		});
 	}, [userId, token]);
+
+	useEffect(() => {
+		history(1, 4, "WEEK", token)
+			.then((res) => {
+				setUsers(res["data"]["data"]);
+				setPagination(res["data"]["pagination"]);
+			})
+			.catch((err) => {
+				console.log(err);
+			});
+	}, [token]);
 
 	const defaultValue = 0;
 	const defaultPhoneNumber = "No Phone Number";
 
 	const toTopUpHandler = () => {
-		setIsTopUpActive(true);
+		telephoneNumber === null ? router.push("/profile/update-phone") : setIsTopUpActive(true);
 	};
 
 	const topUpCloseHandler = () => {
@@ -88,38 +101,6 @@ export default function Home() {
 		});
 	};
 
-	//* simulate users when fetched
-	let users = [
-		{
-			name: "Jack",
-			img: jack,
-			status: "Accept",
-			income: true,
-			amount: 50000,
-		},
-		{
-			name: "John",
-			img: john,
-			status: "Transfer",
-			income: false,
-			amount: 149000,
-		},
-		{
-			name: "Christine",
-			img: christine,
-			status: "Accept",
-			income: true,
-			amount: 150000,
-		},
-		{
-			name: "Rachel",
-			img: rachel,
-			status: "Topup",
-			income: false,
-			amount: 249000,
-		},
-	];
-
 	return (
 		<>
 			<Layout title={"Home"}>
@@ -142,7 +123,10 @@ export default function Home() {
 									</p>
 								</div>
 								<div className="right hidden lg:flex flex-col w-1/6 gap-y-4">
-									<button onClick={() => router.push("/transfer")} className="transfer btn normal-case bg-[#8294f6] border-fazzpay-secondary hover:bg-fazzpay-primary/70 hover:border-[#B5B0ED]">
+									<button
+										onClick={() => router.push("/transfer")}
+										className="transfer btn normal-case bg-[#8294f6] border-fazzpay-secondary hover:bg-fazzpay-primary/70 hover:border-[#B5B0ED]"
+									>
 										<div className="flex items-center gap-x-4">
 											<svg
 												width="28"
@@ -204,7 +188,10 @@ export default function Home() {
 								</div>
 							</section>
 							<div className="buttons lg:hidden flex justify-between w-full h-20">
-								<button onClick={() => router.push("/transfer")} className="transfer w-[47%] h-full btn normal-case bg-[#8294f6] border-fazzpay-secondary hover:bg-fazzpay-primary/70 hover:border-[#B5B0ED]">
+								<button
+									onClick={() => router.push("/transfer")}
+									className="transfer w-[47%] h-full btn normal-case bg-[#8294f6] border-fazzpay-secondary hover:bg-fazzpay-primary/70 hover:border-[#B5B0ED]"
+								>
 									<div className="flex items-center gap-x-4">
 										<svg
 											width="28"
@@ -232,7 +219,10 @@ export default function Home() {
 										<p className="text-fazzpay-secondary font-bold text-lg">Transfer</p>
 									</div>
 								</button>
-								<button onClick={() => toTopUpHandler()} className="top-up w-[47%] h-full btn normal-case bg-[#8294f6] border-fazzpay-secondary hover:bg-fazzpay-primary/70 hover:border-[#B5B0ED]">
+								<button
+									onClick={() => toTopUpHandler()}
+									className="top-up w-[47%] h-full btn normal-case bg-[#8294f6] border-fazzpay-secondary hover:bg-fazzpay-primary/70 hover:border-[#B5B0ED]"
+								>
 									<div className="flex items-center gap-x-4">
 										<svg
 											width="28"
@@ -326,48 +316,59 @@ export default function Home() {
 										</div>
 									</div>
 									<div className="bottom-side flex justify-center">
-										{/* <Image alt="income expense graphic" src={graphic} /> */}
 										<Chart />
 									</div>
 								</div>
-								<div className="right w-full lg:w-2/6 bg-fazzpay-secondary rounded-[25px] shadow-[0px_4px_20px_rgba(0,0,0,0.5)] md:p-10 p-3 flex flex-col gap-y-10">
-									{/* //TODO: if "see all" is clicked then redirect to history */}
+								<div className="right w-full lg:w-2/6 bg-fazzpay-secondary rounded-[25px] shadow-[0px_4px_20px_rgba(0,0,0,0.5)] md:p-5 p-3 flex flex-col gap-y-10">
 									<div className="title flex items-center justify-between">
 										<p className="font-bold text-lg text-fazzpay-dark">Transaction History</p>
-										<p className="font-semibold text-sm text-fazzpay-primary cursor-pointer">
+										<p
+											onClick={() => router.push("/home/history")}
+											className="font-semibold text-sm text-fazzpay-primary cursor-pointer"
+										>
 											See all
 										</p>
 									</div>
-									<div className="content-wrapper flex flex-col gap-y-8">
-										{users.map((user, idx) => {
-											return (
-												<div key={idx} className="flex items-center justify-between">
-													<div className="flex items-center gap-x-5">
-														<div>
-															<Image
-																alt="user"
-																height={56}
-																width={56}
-																src={user.img}
-																className="rounded-md"
-															/>
+									{users.length === 0 ? (
+										<div className="content-wrapper h-1/2 flex justify-center items-center">
+											<p className="text-3xl font-bold">No Transaction Yet</p>
+										</div>
+									) : (
+										<div className="content-wrapper flex flex-col gap-y-8">
+											{users.map((user, idx) => {
+												return (
+													<div key={idx} className="flex items-center justify-between">
+														<div className="flex items-center gap-x-5">
+															<div>
+																<Image
+																	alt="user"
+																	height={56}
+																	width={56}
+																	src={
+																		user.image
+																			? `${process.env.NEXT_PUBLIC_CLOUDINARY_URL}${user.image}`
+																			: defaultProfile
+																	}
+																	className="rounded-md"
+																/>
+															</div>
+															<div>
+																<p className="text-[#4D4B57] font-bold">{`${user.firstName} ${user.lastName}`}</p>
+																<p className="text-[#7A7886] text-sm capitalize">{user.type}</p>
+															</div>
 														</div>
-														<div>
-															<p className="text-[#4D4B57] font-bold">{user.name}</p>
-															<p className="text-[#7A7886] text-sm">{user.status}</p>
-														</div>
+														<p
+															className={`${
+																user.type !== "send" ? "text-[#1EC15F]" : "text-fazzpay-error"
+															} font-bold text-lg`}
+														>{`${user.type !== "send" ? "+" : "-"}Rp${user.amount.toLocaleString(
+															"id-ID"
+														)}`}</p>
 													</div>
-													<p
-														className={`${
-															user.income === true ? "text-[#1EC15F]" : "text-fazzpay-error"
-														} font-bold text-lg`}
-													>{`${user.income === true ? "+" : "-"}Rp${user.amount.toLocaleString(
-														"id-ID"
-													)}`}</p>
-												</div>
-											);
-										})}
-									</div>
+												);
+											})}
+										</div>
+									)}
 								</div>
 							</section>
 						</section>

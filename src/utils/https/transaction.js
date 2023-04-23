@@ -21,3 +21,9 @@ export const transfer = (receiverId, amount, notes, token) => {
 	const config = { headers: { Authorization: `Bearer ${token}` } };
 	return axios.post(url, body, config);
 };
+
+export const history = (page, limit, filter, token) => {
+	const url = `${baseUrl}/transaction/history?page=${page}&limit=${limit}&filter=${filter}`;
+	const config = { headers: { Authorization: `Bearer ${token}` } };
+	return axios.get(url, config);
+};
