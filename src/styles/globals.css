@@ -2,12 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer components {
-  .landing-hero {
-    background-image: url('../assets/img/bg-primary.webp');
-  }
+@layer base {
+	html {
+		scroll-behavior: smooth;
+	}
+}
 
-  .auth-hero {
-    background-image: url('../assets/img/auth-bg.webp');
-  }
+@layer components {
+	.landing-hero {
+		background-image: url("../assets/img/bg-primary.webp");
+	}
+
+	.auth-hero {
+		background-image: url("../assets/img/auth-bg.webp");
+	}
 }

@@ -9,7 +9,7 @@ import { logout } from "@/utils/https/auth";
 import { authAction } from "@/redux/slices/auth";
 
 export default function Sidebar() {
-	const dispatch = useDispatch()
+	const dispatch = useDispatch();
 
 	const router = useRouter();
 
@@ -42,7 +42,7 @@ export default function Sidebar() {
 	};
 
 	const toTransferHandler = () => {
-		phoneNumber === null ? router.push("/profile/update-phone") :	router.push("/transfer");
+		phoneNumber === null ? router.push("/profile/update-phone") : router.push("/transfer");
 		setIsTransferActive(true);
 	};
 
@@ -277,7 +277,12 @@ export default function Sidebar() {
 				</div>
 			</section>
 			<section className="bottom flex flex-col justify-end">
-				<div onClick={() => toLogoutHandler()} className={`logout flex gap-x-5 items center cursor-pointer ${isLogoutActive === true ? style.active : style.inactive} hover:text-fazzpay-primary hover:font-bold hover:border-l-[5px] hover:border-l-fazzpay-primary`}>
+				<div
+					onClick={() => toLogoutHandler()}
+					className={`logout flex gap-x-5 items center cursor-pointer ${
+						isLogoutActive === true ? style.active : style.inactive
+					} hover:text-fazzpay-primary hover:font-bold hover:border-l-[5px] hover:border-l-fazzpay-primary`}
+				>
 					<div className="tab-icon pl-10">
 						<svg
 							width="28"
@@ -347,7 +352,7 @@ export default function Sidebar() {
 									type="number"
 									className={`h-16 text-lg border-b rounded-none ${
 										amount ? "border-transparent" : "border-[#A9A9A966]"
-									} focus:outline-none appearance-none bg-transparent w-3/4 mb-2 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`}
+									} focus:outline-none bg-transparent w-3/4 mb-2 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`}
 								/>
 							</div>
 							<div className="submit-button pt-10 flex justify-end">

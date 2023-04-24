@@ -85,10 +85,10 @@ export default function SignUp() {
 										>
 											<path
 												d="M4 20C4 17 8 17 10 15C11 14 8 14 8 9C8 5.667 9.333 4 12 4C14.667 4 16 5.667 16 9C16 14 13 14 14 15C16 17 20 17 20 20"
-												stroke-opacity="0.6"
-												stroke-width="2"
-												stroke-linecap="round"
-												stroke-linejoin="round"
+												strokeOpacity="0.6"
+												strokeWidth="2"
+												strokeLinecap="round"
+												strokeLinejoin="round"
 											/>
 										</svg>
 									</div>
@@ -115,10 +115,10 @@ export default function SignUp() {
 										>
 											<path
 												d="M4 20C4 17 8 17 10 15C11 14 8 14 8 9C8 5.667 9.333 4 12 4C14.667 4 16 5.667 16 9C16 14 13 14 14 15C16 17 20 17 20 20"
-												stroke-opacity="0.6"
-												stroke-width="2"
-												stroke-linecap="round"
-												stroke-linejoin="round"
+												strokeOpacity="0.6"
+												strokeWidth="2"
+												strokeLinecap="round"
+												strokeLinejoin="round"
 											/>
 										</svg>
 									</div>
@@ -176,7 +176,7 @@ export default function SignUp() {
 												width="16"
 												height="16"
 												fill="currentColor"
-												class="bi bi-eye-slash fill-[#A9A9A9CC] cursor-pointer h-6 w-6 absolute top-[6px] right-[10px]"
+												className="bi bi-eye-slash fill-[#A9A9A9CC] cursor-pointer h-6 w-6 absolute top-[6px] right-[10px]"
 												viewBox="0 0 16 16"
 												onClick={() => setVisible(!visible)}
 											>
@@ -190,7 +190,7 @@ export default function SignUp() {
 												width="16"
 												height="16"
 												fill="currentColor"
-												class="bi bi-eye fill-[#A9A9A9CC] cursor-pointer h-6 w-6 absolute top-[6px] right-[10px]"
+												className="bi bi-eye fill-[#A9A9A9CC] cursor-pointer h-6 w-6 absolute top-[6px] right-[10px]"
 												viewBox="0 0 16 16"
 												onClick={() => setVisible(!visible)}
 											>

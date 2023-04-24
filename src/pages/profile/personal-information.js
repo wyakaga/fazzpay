@@ -9,6 +9,7 @@ import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
 import Footer from "@/components/Footer";
 import Layout from "@/components/Layout";
+import Loader from "@/components/Loader";
 
 export default function PersonalInformation() {
 	const userId = useSelector((state) => state.auth.data.id);
@@ -18,14 +19,23 @@ export default function PersonalInformation() {
 	const [lastName, setLastName] = useState("");
 	const [email, setEmail] = useState("");
 	const [phoneNumber, setPhoneNumber] = useState("");
+	const [isLoading, setIsLoading] = useState(false);
 
 	useEffect(() => {
-		getDataById(userId, token).then((res) => {
-			setFirstName(res["data"]["data"]["firstName"]);
-			setEmail(res["data"]["data"]["email"]);
-			setLastName(res["data"]["data"]["lastName"]);
-			setPhoneNumber(res["data"]["data"]["noTelp"]);
-		});
+		setIsLoading(true);
+		getDataById(userId, token)
+			.then((res) => {
+				setFirstName(res["data"]["data"]["firstName"]);
+				setEmail(res["data"]["data"]["email"]);
+				setLastName(res["data"]["data"]["lastName"]);
+				setPhoneNumber(res["data"]["data"]["noTelp"]);
+			})
+			.catch((err) => {
+				console.log(err);
+			})
+			.finally(() => {
+				setIsLoading(false);
+			});
 	}, [userId, token]);
 
 	return (
@@ -33,8 +43,9 @@ export default function PersonalInformation() {
 			<PrivateRoute>
 				<Layout title={"Your personal information"}>
 					<Header />
+					{isLoading && <Loader />}
 					<div className="container">
-						<div className="flex gap-x-6 py-40 px-5 md:px-28 bg-[#fafcff]">
+						<div className="flex gap-x-6 pb-32 pt-56 px-5 md:px-28 bg-[#fafcff]">
 							{/* left side start */}
 							<Sidebar />
 							{/* left side end */}

@@ -45,7 +45,7 @@ export default function ChangePwd() {
 				<Layout title={"Edit phone number"}>
 					<Header />
 					<div className="container">
-						<div className="flex gap-x-6 py-40 px-5 md:px-28 bg-[#fafcff]">
+						<div className="flex gap-x-6 pb-32 pt-56 px-5 md:px-28 bg-[#fafcff]">
 							{/* left side start */}
 							<Sidebar />
 							{/* left side end */}
