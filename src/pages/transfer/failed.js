@@ -11,6 +11,7 @@ import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
 import Footer from "@/components/Footer";
 import Layout from "@/components/Layout";
+import Loader from "@/components/Loader";
 
 import defaultProfile from "@/assets/img/profile-placeholder.webp";
 
@@ -30,8 +31,10 @@ export default function FailedTransfer() {
 	const [lastName, setLastName] = useState("");
 	const [phoneNumber, setPhoneNumber] = useState("");
 	const [image, setImage] = useState(null);
+	const [isLoading, setIsLoading] = useState(false);
 
 	useEffect(() => {
+		setIsLoading(true);
 		getDataById(userId, token)
 			.then((res) => {
 				setFirstName(res["data"]["data"]["firstName"]);
@@ -41,6 +44,8 @@ export default function FailedTransfer() {
 			})
 			.catch((err) => {
 				console.log(err);
+			}).finally(() => {
+				setIsLoading(false);
 			});
 	}, [userId, token]);
 
@@ -75,8 +80,9 @@ export default function FailedTransfer() {
 				<PhoneCheck>
 					<Layout title={"Transfer Failed"}>
 						<Header />
+						{isLoading && <Loader />}
 						<div className="container">
-							<div className="flex gap-x-6 py-32 px-5 md:px-28">
+							<div className="flex gap-x-6 pb-32 pt-56 px-5 md:px-28">
 								<Sidebar />
 								<div className="main-content font-nunitoSans w-full lg:w-3/4 flex flex-col gap-y-6 py-5 px-10 bg-white rounded-[10px] shadow-[0px_4px_20px_rgba(0,0,0,0.5)]">
 									<div className="top flex justify-center">
@@ -124,6 +130,7 @@ export default function FailedTransfer() {
 																	? `${process.env.NEXT_PUBLIC_CLOUDINARY_URL}${image}`
 																	: defaultProfile
 															}
+															sizes="70px"
 															className="rounded-md"
 														/>
 													</div>

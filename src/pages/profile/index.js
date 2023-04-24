@@ -14,6 +14,7 @@ import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
 import Footer from "@/components/Footer";
 import Layout from "@/components/Layout";
+import Loader from "@/components/Loader";
 
 import defaultPic from "@/assets/img/profile-placeholder.webp";
 
@@ -30,11 +31,20 @@ export default function Profile() {
 	const [image, setImage] = useState(null);
 	const [imagePreview, setImagePreview] = useState(null);
 	const [form, setForm] = useState({ firstName: "", lastName: "" });
+	const [isLoading, setIsLoading] = useState(false);
 
 	useEffect(() => {
-		getDataById(userId, token).then((res) => {
-			setData(res["data"]["data"]);
-		});
+		setIsLoading(true);
+		getDataById(userId, token)
+			.then((res) => {
+				setData(res["data"]["data"]);
+			})
+			.catch((err) => {
+				console.log(err);
+			})
+			.finally(() => {
+				setIsLoading(false);
+			});
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
@@ -165,8 +175,9 @@ export default function Profile() {
 			<PrivateRoute>
 				<Layout title={"Your profile"}>
 					<Header />
+					{isLoading && <Loader />}
 					<div className="container">
-						<div className="flex gap-x-6 py-40 px-5 md:px-28 bg-[#fafcff]">
+						<div className="flex gap-x-6 pb-32 pt-56 px-5 md:px-28 bg-[#fafcff]">
 							{/* left side start */}
 							<Sidebar />
 							{/* left side end */}
@@ -183,7 +194,8 @@ export default function Profile() {
 											}
 											height={80}
 											width={80}
-											className="rounded-md"
+											priority={true}
+											className="rounded-md h-auto w-auto"
 										/>
 									</div>
 									<div

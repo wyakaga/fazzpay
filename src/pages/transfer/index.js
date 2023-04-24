@@ -12,6 +12,7 @@ import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
 import Footer from "@/components/Footer";
 import Layout from "@/components/Layout";
+import Loader from "@/components/Loader";
 
 import defaultProfile from "@/assets/img/profile-placeholder.webp";
 
@@ -24,14 +25,17 @@ export default function Transfer() {
 	const [searchValue, setSearchValue] = useState("");
 	const [page, setPage] = useState(1);
 	const [pagination, setPagination] = useState([]);
+	const [isLoading, setIsLoading] = useState(false);
 
 	useEffect(() => {
+		setIsLoading(true);
 		getUsers(page, 4, searchValue, token)
 			.then((res) => {
 				setUsers(res["data"]["data"]);
 				setPagination(res["data"]["pagination"]);
 			})
-			.catch((error) => console.log(error));
+			.catch((error) => console.log(error))
+			.finally(() => setIsLoading(false));
 	}, [page, searchValue, token]);
 
 	const onSearchChange = (e) => {
@@ -46,8 +50,9 @@ export default function Transfer() {
 				<PhoneCheck>
 					<Layout title={"Transfer"}>
 						<Header />
+						{isLoading && <Loader />}
 						<div className="container">
-							<div className="flex gap-x-6 py-32 px-5 md:px-28">
+							<div className="flex gap-x-6 pb-32 pt-56 px-5 md:px-28">
 								<Sidebar />
 								<div className="main-content font-nunitoSans w-full lg:w-3/4 flex flex-col gap-y-6 py-5 px-10 bg-white rounded-[10px] shadow-[0px_4px_20px_rgba(0,0,0,0.5)]">
 									<section className="top flex flex-col gap-y-5">
@@ -88,6 +93,7 @@ export default function Transfer() {
 																				: defaultProfile
 																		}
 																		fill={true}
+																		sizes="70px"
 																		className="rounded-md"
 																	/>
 																</div>

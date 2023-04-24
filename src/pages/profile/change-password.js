@@ -60,7 +60,7 @@ export default function ChangePwd() {
 				<Layout title={"Change password"}>
 					<Header />
 					<div className="container">
-						<div className="flex gap-x-6 py-40 px-5 md:px-28 bg-[#fafcff]">
+						<div className="flex gap-x-6 pb-32 pt-56 px-5 md:px-28 bg-[#fafcff]">
 							{/* left side start */}
 							<Sidebar />
 							{/* left side end */}

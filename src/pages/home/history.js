@@ -9,6 +9,7 @@ import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
 import Footer from "@/components/Footer";
 import Layout from "@/components/Layout";
+import Loader from "@/components/Loader";
 
 import defaultProfile from "@/assets/img/profile-placeholder.webp";
 
@@ -19,8 +20,10 @@ export default function History() {
 	const [sort, setSort] = useState("");
 	const [page, setPage] = useState(1);
 	const [pagination, setPagination] = useState([]);
+	const [isLoading, setIsLoading] = useState(false);
 
 	useEffect(() => {
+		setIsLoading(true);
 		history(page, 6, sort, token)
 			.then((res) => {
 				setUsers(res["data"]["data"]);
@@ -28,6 +31,9 @@ export default function History() {
 			})
 			.catch((err) => {
 				console.log(err);
+			})
+			.finally(() => {
+				setIsLoading(false);
 			});
 	}, [page, sort, token]);
 
@@ -40,8 +46,9 @@ export default function History() {
 			<PrivateRoute>
 				<Layout title={"Your Transactions History"}>
 					<Header />
+					{isLoading && <Loader />}
 					<div className="container">
-						<div className="flex gap-x-6 py-32 px-5 md:px-28">
+						<div className="flex gap-x-6 pb-32 pt-56 px-5 md:px-28">
 							<Sidebar />
 							<div className="main-content font-nunitoSans w-full lg:w-3/4 flex flex-col gap-y-6 py-5 px-10 bg-white rounded-[10px] shadow-[0px_4px_20px_rgba(0,0,0,0.5)]">
 								<section className="top flex justify-between">
@@ -88,7 +95,7 @@ export default function History() {
 																				? `${process.env.NEXT_PUBLIC_CLOUDINARY_URL}${user.image}`
 																				: defaultProfile
 																		}
-																		className="rounded-md"
+																		className="rounded-md h-auto w-auto"
 																	/>
 																</div>
 																<div>

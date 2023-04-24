@@ -16,6 +16,7 @@ import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
 import Footer from "@/components/Footer";
 import Layout from "@/components/Layout";
+import Loader from "@/components/Loader";
 
 import defaultProfile from "@/assets/img/profile-placeholder.webp";
 
@@ -43,10 +44,10 @@ export default function TransferDetail() {
 	const [isConfirmed, setIsConfirmed] = useState(false);
 	const [isModalPin, setIsModalPin] = useState(false);
 	const [pins, setPins] = useState({ pin1: "", pin2: "", pin3: "", pin4: "", pin5: "", pin6: "" });
-
-	console.log(userId);
+	const [isLoading, setIsLoading] = useState(false);
 
 	useEffect(() => {
+		setIsLoading(true);
 		getDataById(userId, token)
 			.then((res) => {
 				setFirstName(res["data"]["data"]["firstName"]);
@@ -56,6 +57,8 @@ export default function TransferDetail() {
 			})
 			.catch((err) => {
 				console.log(err);
+			}).finally(() => {
+				setIsLoading(false);
 			});
 	}, [userId, token]);
 
@@ -165,8 +168,9 @@ export default function TransferDetail() {
 						}
 					>
 						<Header />
+						{isLoading && <Loader />}
 						<div className="container">
-							<div className="flex gap-x-6 py-32 px-5 md:px-28">
+							<div className="flex gap-x-6 pb-32 pt-56 px-5 md:px-28">
 								<Sidebar />
 								<div className="main-content font-nunitoSans w-full lg:w-3/4 flex flex-col gap-y-6 py-5 px-10 bg-white rounded-[10px] shadow-[0px_4px_20px_rgba(0,0,0,0.5)]">
 									<section className="top flex flex-col gap-y-5">
@@ -185,6 +189,7 @@ export default function TransferDetail() {
 															? `${process.env.NEXT_PUBLIC_CLOUDINARY_URL}${image}`
 															: defaultProfile
 													}
+													sizes="70px"
 													className="rounded-md"
 												/>
 											</div>
@@ -265,7 +270,7 @@ export default function TransferDetail() {
 															notes ? "stroke-fazzpay-primary" : "stroke-[#A9A9A999]"
 														} h-[19.83px] w-[19.83px]`}
 													>
-														<g clip-path="url(#clip0_63_384)">
+														<g clipPath="url(#clip0_63_384)">
 															<path
 																d="M7.79199 1.37481C7.91237 1.25443 8.05528 1.15895 8.21256 1.0938C8.36984 1.02865 8.53842 0.995117 8.70866 0.995117C8.8789 0.995117 9.04747 1.02865 9.20475 1.0938C9.36204 1.15895 9.50495 1.25443 9.62533 1.37481C9.7457 1.49519 9.84119 1.6381 9.90634 1.79538C9.97149 1.95267 10.005 2.12124 10.005 2.29148C10.005 2.46172 9.97149 2.63029 9.90634 2.78758C9.84119 2.94486 9.7457 3.08777 9.62533 3.20815L3.43783 9.39565L0.916992 10.0831L1.60449 7.56231L7.79199 1.37481Z"
 																strokeLinecap="round"

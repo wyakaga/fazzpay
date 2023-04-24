@@ -15,6 +15,7 @@ import Footer from "@/components/Footer";
 import Sidebar from "@/components/Sidebar";
 import Chart from "@/components/Chart";
 import Layout from "@/components/Layout";
+import Loader from "@/components/Loader";
 
 import defaultProfile from "@/assets/img/profile-placeholder.webp";
 
@@ -29,12 +30,14 @@ export default function Home() {
 	const [isTopUpActive, setIsTopUpActive] = useState(false);
 	const [amount, setAmount] = useState("");
 	const [users, setUsers] = useState([]);
+	const [isLoading, setIsLoading] = useState(false);
 
 	const userId = useSelector((state) => state.auth.data.id);
 	const token = useSelector((state) => state.auth.data.token);
 	const telephoneNumber = useSelector((state) => state.user.phoneNumber);
 
 	useEffect(() => {
+		setIsLoading(true);
 		getData(userId, token)
 			.then((res) => {
 				setTotalIncome(res["data"]["data"]["totalIncome"]);
@@ -42,6 +45,9 @@ export default function Home() {
 			})
 			.catch((err) => {
 				console.log(err);
+			})
+			.finally(() => {
+				setIsLoading(false);
 			});
 	}, [userId, token]);
 
@@ -57,7 +63,6 @@ export default function Home() {
 		history(1, 4, "WEEK", token)
 			.then((res) => {
 				setUsers(res["data"]["data"]);
-				setPagination(res["data"]["pagination"]);
 			})
 			.catch((err) => {
 				console.log(err);
@@ -107,8 +112,9 @@ export default function Home() {
 			<PrivateRoute>
 				<Layout title={"Home"}>
 					<Header />
+					{isLoading && <Loader />}
 					<div className="container">
-						<div className="flex gap-x-6 py-32 px-5 md:px-28">
+						<div className="flex gap-x-6 pb-32 pt-56 px-5 md:px-28">
 							{/* left side start */}
 							<Sidebar />
 							{/* left side end */}
@@ -353,7 +359,7 @@ export default function Home() {
 																				? `${process.env.NEXT_PUBLIC_CLOUDINARY_URL}${user.image}`
 																				: defaultProfile
 																		}
-																		className="rounded-md"
+																		className="rounded-md h-auto w-auto"
 																	/>
 																</div>
 																<div>
@@ -412,7 +418,7 @@ export default function Home() {
 												type="number"
 												className={`h-16 text-lg border-b rounded-none ${
 													amount ? "border-transparent" : "border-[#A9A9A966]"
-												} focus:outline-none appearance-none bg-transparent w-3/4 mb-2 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`}
+												} focus:outline-none bg-transparent w-3/4 mb-2 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`}
 											/>
 										</div>
 										<div className="submit-button pt-10 flex justify-end">

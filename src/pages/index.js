@@ -72,12 +72,12 @@ export default function Home() {
 									Try It Free
 								</div>
 								<div className="lg:hidden mb-[-30rem]">
-									<Image alt="img" src={innerHero} />
+									<Image alt="img" src={innerHero} priority={true} />
 								</div>
 							</div>
 						</div>
 						<div className="hidden lg:block lg:w-1/2 lg:mt-[5.5rem]">
-							<Image alt="img" src={innerHero} />
+							<Image alt="img" src={innerHero} priority={true} />
 						</div>
 					</section>
 					{/* section1 end */}

@@ -36,7 +36,10 @@ export default function Header() {
 					</p>
 				</div>
 				<div className="navbar-end flex flex-row lg:gap-x-5 gap-x-2">
-					<div onClick={() => router.push("/profile")} className="flex gap-x-4 cursor-pointer">
+					<div
+						onClick={() => router.push("/profile")}
+						className="flex items-center gap-x-4 cursor-pointer"
+					>
 						<div>
 							<Image
 								alt="user profile"
@@ -47,7 +50,7 @@ export default function Header() {
 								}
 								width={52}
 								height={52}
-								className="rounded-md"
+								className="rounded-md h-auto w-auto"
 							/>
 						</div>
 						<div>
@@ -70,16 +73,16 @@ export default function Header() {
 							<path
 								d="M18 8C18 6.4087 17.3679 4.88258 16.2426 3.75736C15.1174 2.63214 13.5913 2 12 2C10.4087 2 8.88258 2.63214 7.75736 3.75736C6.63214 4.88258 6 6.4087 6 8C6 15 3 17 3 17H21C21 17 18 15 18 8Z"
 								stroke="#4D4B57"
-								stroke-width="2"
-								stroke-linecap="round"
-								stroke-linejoin="round"
+								strokeWidth="2"
+								strokewinecap="round"
+								strokeLinejoin="round"
 							/>
 							<path
 								d="M13.7305 21C13.5547 21.3031 13.3024 21.5547 12.9987 21.7295C12.6951 21.9044 12.3509 21.9965 12.0005 21.9965C11.6501 21.9965 11.3059 21.9044 11.0023 21.7295C10.6987 21.5547 10.4463 21.3031 10.2705 21"
 								stroke="#4D4B57"
-								stroke-width="2"
-								stroke-linecap="round"
-								stroke-linejoin="round"
+								strokeWidth="2"
+								strokewinecap="round"
+								strokeLinejoin="round"
 							/>
 						</svg>
 					</div>
