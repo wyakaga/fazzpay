@@ -1,42 +1,65 @@
-// import Image from "next/image";
+import Image from "next/image";
 import { useRouter } from "next/router";
+import { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 
-// import catherine from "@/assets/img/carousel3.webp";
+import { getDataById } from "@/utils/https/user";
+
+import defaultPic from "@/assets/img/profile-placeholder.webp";
 
 // TODO: add dropdown to bell icon
 
 export default function Header() {
-	const router = useRouter()
+	const router = useRouter();
 
-	const navigate = (to) => router.push(to)
+	const userId = useSelector((state) => state.auth.data.id);
+	const token = useSelector((state) => state.auth.data.token);
+
+	const [data, setData] = useState({});
+
+	useEffect(() => {
+		getDataById(userId, token).then((res) => {
+			setData(res["data"]["data"]);
+		});
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	return (
 		<>
-			{/* after login bg-fazzpay-secondary/80 text-fazzpay-primary rounded-b-md shadow-[0px_4px_20px_rgba(0,0,0,0.5)] || before login bg-fazzpay-primary/80 text-fazzpay-secondary */}
-			<div className="navbar lg:px-28 px-4 py-6 font-nunitoSans bg-fazzpay-primary/80 fixed top-0 left-0 z-50">
+			<div className="navbar lg:px-28 px-4 py-6 font-nunitoSans bg-fazzpay-secondary/80 rounded-b-md shadow-[0px_4px_20px_rgba(0,0,0,0.5)] fixed top-0 left-0 z-50">
 				<div className="navbar-start">
-					<p className="text-3xl text-fazzpay-secondary font-bold">FazzPay</p>
+					<p
+						onClick={() => router.push("/home")}
+						className="text-3xl text-fazzpay-primary font-bold cursor-pointer"
+					>
+						FazzPay
+					</p>
 				</div>
 				<div className="navbar-end flex flex-row lg:gap-x-5 gap-x-2">
-          {/* conditional rendering */}
-					<div className="btn lg:w-1/6 normal-case bg-fazzpay-primary text-fazzpay-secondary hover:bg-fazzpay-secondary hover:text-fazzpay-primary" onClick={() => navigate("/login")}>Login</div>
-					<div className="btn lg:w-1/6 normal-case bg-fazzpay-primary text-fazzpay-secondary hover:bg-fazzpay-secondary hover:text-fazzpay-primary" onClick={() => navigate("signup")}>Sign Up</div>
-					{/* <div className="flex gap-x-4">
+					<div onClick={() => router.push("/profile")} className="flex gap-x-4 cursor-pointer">
 						<div>
 							<Image
 								alt="user profile"
-								src={catherine}
+								src={
+									data["image"]
+										? `${process.env.NEXT_PUBLIC_CLOUDINARY_URL}${data["image"]}`
+										: defaultPic
+								}
 								width={52}
 								height={52}
 								className="rounded-md"
 							/>
 						</div>
 						<div>
-							<p className="font-bold text-lg text-fazzpay-dark">Catherine Hill</p>
-							<p className="text-sm text-fazzpay-dark/90">+62 8139 3877 7946</p>
+							<p className="font-bold text-lg text-fazzpay-dark">{`${
+								data["firstName"] ? data["firstName"] : "Anonymous"
+							} ${data["lastName"] ? data["lastName"] : "Anonymous"}`}</p>
+							<p className="text-sm text-fazzpay-dark/90">
+								{data["noTelp"] ? data["noTelp"] : "No Phone Number"}
+							</p>
 						</div>
-					</div> */}
-					{/* <div className="cursor-pointer">
+					</div>
+					<div className="cursor-pointer">
 						<svg
 							width="24"
 							height="24"
@@ -59,7 +82,7 @@ export default function Header() {
 								stroke-linejoin="round"
 							/>
 						</svg>
-					</div> */}
+					</div>
 				</div>
 			</div>
 		</>

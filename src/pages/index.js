@@ -1,6 +1,8 @@
 import Image from "next/image";
+import { useRouter } from "next/router";
 
-import Header from "@/components/Header";
+import { PublicRoute } from "@/utils/wrapper/publicRoute";
+
 import Layout from "@/components/Layout";
 
 import innerHero from "@/assets/img/hero-phone.webp";
@@ -20,12 +22,38 @@ import phone from "@/assets/icons/phone-icon.webp";
 import lock from "@/assets/icons/lock-icon.webp";
 
 export default function Home() {
+	const router = useRouter();
+
+	const navigate = (to) => router.push(to);
+
 	return (
+		<PublicRoute>
 			<Layout title={"Fazzpay: Simplify financial needs"}>
-				<Header />
+				{/* <Header /> */}
 				<div className="container">
+					{/* header start */}
+					<div className="navbar lg:px-28 px-4 py-6 font-nunitoSans bg-fazzpay-primary/80 fixed top-0 left-0 z-50">
+						<div className="navbar-start">
+							<p className="text-3xl text-fazzpay-secondary font-bold">FazzPay</p>
+						</div>
+						<div className="navbar-end flex flex-row lg:gap-x-5 gap-x-2">
+							<div
+								className="btn lg:w-1/6 normal-case bg-fazzpay-primary text-fazzpay-secondary hover:bg-fazzpay-secondary hover:text-fazzpay-primary"
+								onClick={() => navigate("/login")}
+							>
+								Login
+							</div>
+							<div
+								className="btn lg:w-1/6 normal-case bg-fazzpay-primary text-fazzpay-secondary hover:bg-fazzpay-secondary hover:text-fazzpay-primary"
+								onClick={() => navigate("signup")}
+							>
+								Sign Up
+							</div>
+						</div>
+					</div>
+					{/* header end */}
 					{/* section1 start */}
-					<section className="font-nunitoSans flex items-center justify-center h-[128vh] w-screen bg-cover landing-hero mt-[-4rem] lg:h-[132.5vh] lg:mt-0">
+					<section className="font-nunitoSans flex lg:flex-row flex-col items-center justify-center h-[260vh] w-screen bg-cover landing-hero mt-[-4rem] lg:h-[132.5vh] lg:mt-0">
 						<div className="lg:w-1/2 lg:pl-28 lg:pb-[4rem]">
 							<h1 className="text-fazzpay-secondary font-extrabold text-4xl leading-relaxed text-center mt-[-15rem] lg:mt-0 lg:text-left lg:text-6xl lg:leading-relaxed">
 								Awesome App <br />
@@ -39,7 +67,7 @@ export default function Home() {
 								We bring you a mobile app for banking problems that oftenly wasting much of your
 								times.
 							</p>
-							<div className="flex flex-wrap justify-center items-center w-full lg:block">
+							<div className="flex lg:flex-row flex-col justify-center items-center w-full lg:block">
 								<div className="btn normal-case bg-fazzpay-secondary text-fazzpay-primary hover:bg-fazzpay-primary hover:text-fazzpay-secondary px-12 mt-16">
 									Try It Free
 								</div>
@@ -48,7 +76,6 @@ export default function Home() {
 								</div>
 							</div>
 						</div>
-
 						<div className="hidden lg:block lg:w-1/2 lg:mt-[5.5rem]">
 							<Image alt="img" src={innerHero} />
 						</div>
@@ -81,7 +108,7 @@ export default function Home() {
 								to use by all users around the world.
 							</p>
 						</div>
-						<div className="flex flex-wrap justify-between px-8 mt-[4rem] gap-y-8">
+						<div className="flex lg:flex-row flex-col items-center lg:justify-between px-8 mt-[4rem] gap-y-8">
 							<div className="w-[367px] h-[344px] bg-[#fffafa] border-2 rounded-[25px] shadow-xl flex flex-wrap items-center py-[2rem]">
 								<Image alt="img" className="mx-auto" src={phone} />
 								<h1 className="w-full text-center text-[24px] font-bold">24/7 Support</h1>
@@ -114,17 +141,16 @@ export default function Home() {
 					{/* section3 end */}
 					{/* section4 start */}
 					<section className="font-nunitoSans bg-fazzpay-primary/10 flex flex-wrap px-[2rem] md:pl-[3.5rem]">
-						<div className="w-1/2 hidden md:block">
+						<div className="w-1/2 hidden lg:block">
 							<Image alt="img" src={phone1} />
 							<Image alt="img" className="-mt-[6rem]" src={phone2} />
 						</div>
-						<div className="md:w-1/2 w-full flex flex-wrap justify-center">
+						<div className="lg:w-1/2 w-full flex flex-col items-center gap-y-10 lg:flex-wrap lg:justify-center">
 							<p className="text-[60px] font-extrabold mt-[7rem]">
 								All The <span className="text-fazzpay-primary">Great</span>
 								<br />
 								FazzPay Features.
 							</p>
-
 							<div className="flex flex-col gap-y-8">
 								<div className="w-full bg-fazzpay-secondary border-2 shadow-lg px-[1rem] py-[2rem] rounded-[25px]">
 									<h1 className="text-[20px] font-bold pb-[1rem]">
@@ -182,8 +208,8 @@ export default function Home() {
 										<p>
 											“This is the most outstanding app that I’ve ever try in my live, this app is
 											such an amazing masterpiece and it’s suitable for you who is bussy with their
-											bussiness and must transfer money to another person aut there. Just try this app
-											and see the power!”
+											bussiness and must transfer money to another person aut there. Just try this
+											app and see the power!”
 										</p>
 									</div>
 								</div>
@@ -217,8 +243,8 @@ export default function Home() {
 										<h2 className="card-title">Sherina Chaw</h2>
 										<p>Designer</p>
 										<p>
-											“I use this app since 2 years ago and this is the best app that I’ve ever use in
-											my entire life”
+											“I use this app since 2 years ago and this is the best app that I’ve ever use
+											in my entire life”
 										</p>
 									</div>
 								</div>
@@ -320,12 +346,15 @@ export default function Home() {
 							one single app.
 						</p>
 						<div className="flex justify-between md:pr-[6rem] border-t mt-[4rem]">
-							<p className="text-fazzpay-secondary/90 pt-[2rem]">2022 FazzPay. All right reserved.</p>
+							<p className="text-fazzpay-secondary/90 pt-[2rem]">
+								2022 FazzPay. All right reserved.
+							</p>
 							<p className="text-fazzpay-secondary pt-[2rem]">+62 8228 4798 890</p>
 						</div>
 					</footer>
 					{/* Footer end */}
 				</div>
 			</Layout>
+		</PublicRoute>
 	);
 }
