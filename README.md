@@ -61,4 +61,4 @@ Technologies used in the project:
 
 <h2>🛡️ License:</h2>
 
-This project is licensed under the GPL 3 license
+This project is licensed under the AGPL-3.0 license
