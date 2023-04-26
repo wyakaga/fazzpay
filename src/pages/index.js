@@ -82,7 +82,7 @@ export default function Home() {
 					</section>
 					{/* section1 end */}
 					{/* section2 start */}
-					<section className="flex items-center justify-between px-24 h-[18.75rem] bg-fazzpay-primary/10">
+					<section className="flex items-center justify-between px-24 h-[18.75rem] w-screen bg-fazzpay-primary/10">
 						<div>
 							<Image alt="Microsoft Logo" src={microsoft} />
 						</div>
@@ -98,7 +98,7 @@ export default function Home() {
 					</section>
 					{/* section2 end */}
 					{/* section3 start */}
-					<section className="font-nunitoSans bg-[#473AD1]/5 w-[98.9vw] py-36 px-20">
+					<section className="font-nunitoSans bg-[#473AD1]/5 w-screen py-36 px-20">
 						<div className="flex flex-wrap text-center">
 							<p className="w-full md:text-6xl text-5xl font-extrabold">
 								<span className="text-fazzpay-primary">About</span> the Application.
@@ -140,7 +140,7 @@ export default function Home() {
 					</section>
 					{/* section3 end */}
 					{/* section4 start */}
-					<section className="font-nunitoSans bg-fazzpay-primary/10 flex flex-wrap px-[2rem] md:pl-[3.5rem]">
+					<section className="font-nunitoSans bg-fazzpay-primary/10 flex flex-wrap w-screen px-[2rem] md:pl-[3.5rem]">
 						<div className="w-1/2 hidden lg:block">
 							<Image alt="img" src={phone1} />
 							<Image alt="img" className="-mt-[6rem]" src={phone2} />
@@ -181,7 +181,7 @@ export default function Home() {
 					</section>
 					{/* section4 end */}
 					{/* section5 start */}
-					<section className="text-center bg-[#473AD1]/5 font-nunitoSans px-3 py-24 md:pl-[4.5rem]">
+					<section className="text-center bg-[#473AD1]/5 font-nunitoSans w-screen px-3 py-24 md:pl-[4.5rem]">
 						<p className="text-[60px] font-extrabold">
 							What Users are <span className="text-fazzpay-primary">Saying.</span>
 						</p>
@@ -338,7 +338,7 @@ export default function Home() {
 					</section>
 					{/* section5 end */}
 					{/* Footer start */}
-					<footer className="px-[2rem] font-nunitoSans md:pl-28 pt-[5rem] bg-fazzpay-primary h-[438px] w-full">
+					<footer className="px-[2rem] font-nunitoSans md:pl-28 pt-[5rem] bg-fazzpay-primary h-[438px] w-screen">
 						<h1 className="text-fazzpay-secondary text-4xl font-bold">FazzPay</h1>
 						<p className="text-fazzpay-secondary/75 mt-[2rem]">
 							Simplify financial needs and saving <br />
