@@ -100,7 +100,7 @@ export default function Home() {
 					{/* section3 start */}
 					<section className="font-nunitoSans bg-[#473AD1]/5 w-[98.9vw] py-36 px-20">
 						<div className="flex flex-wrap text-center">
-							<p className="w-full text-6xl font-extrabold">
+							<p className="w-full md:text-6xl text-5xl font-extrabold">
 								<span className="text-fazzpay-primary">About</span> the Application.
 							</p>
 							<p className="w-full text-lg font-normal pt-4">
@@ -108,7 +108,7 @@ export default function Home() {
 								to use by all users around the world.
 							</p>
 						</div>
-						<div className="flex lg:flex-row flex-col items-center lg:justify-between px-8 mt-[4rem] gap-y-8">
+						<div className="flex lg:flex-row flex-col items-center justify-center lg:justify-between px-8 mt-[4rem] gap-y-8">
 							<div className="w-[367px] h-[344px] bg-[#fffafa] border-2 rounded-[25px] shadow-xl flex flex-wrap items-center py-[2rem]">
 								<Image alt="img" className="mx-auto" src={phone} />
 								<h1 className="w-full text-center text-[24px] font-bold">24/7 Support</h1>

@@ -261,8 +261,8 @@ export default function Home() {
 										</div>
 									</button>
 								</div>
-								<section className="bottom flex gap-x-6 lg:justify-between">
-									<div className="left hidden bg-fazzpay-secondary rounded-[25px] shadow-[0px_4px_20px_rgba(0,0,0,0.5)] w-4/6 p-10 lg:flex flex-col gap-y-10">
+								<section className="bottom flex flex-col lg:flex-row lg:gap-x-6 gap-y-6 lg:justify-between">
+									<div className="left w-full bg-fazzpay-secondary rounded-[25px] shadow-[0px_4px_20px_rgba(0,0,0,0.5)] lg:w-4/6 p-10 flex flex-col gap-y-10">
 										<div className="top-side flex justify-between">
 											<div className="left-side">
 												<svg
