@@ -2,6 +2,8 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
 import { useState, useEffect } from "react";
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
 
 import { getDataById } from "@/utils/https/user";
 import { PhoneCheck } from "@/utils/wrapper/phoneCheck";
@@ -44,7 +46,8 @@ export default function SuccesTransfer() {
 			})
 			.catch((err) => {
 				console.log(err);
-			}).finally(() => setIsLoading(false));
+			})
+			.finally(() => setIsLoading(false));
 	}, [userId, token]);
 
 	useEffect(() => {
@@ -52,6 +55,17 @@ export default function SuccesTransfer() {
 			setBalance(res["data"]["data"]["balance"]);
 		});
 	}, [id, token]);
+
+	const handleDownloadPdf = () => {
+		const input = document.getElementById("pdf-content");
+
+		html2canvas(input).then((canvas) => {
+			const imgData = canvas.toDataURL("image/jpeg");
+			const pdf = new jsPDF("p", "pt", "letter");
+			pdf.addImage(imgData, "JPEG", 0, 0);
+			pdf.save("transfer-details.pdf");
+		});
+	};
 
 	const details = [
 		{
@@ -90,7 +104,7 @@ export default function SuccesTransfer() {
 										</div>
 									</div>
 									<div className="bottom">
-										<div className="flex flex-col gap-y-10">
+										<div id="pdf-content" className="flex flex-col gap-y-10">
 											<div className="flex flex-col gap-y-5">
 												{details.map((detail, index) => {
 													return (
@@ -137,7 +151,10 @@ export default function SuccesTransfer() {
 												</div>
 											</div>
 											<div className="flex justify-end gap-x-5">
-												<button className="btn normal-case border-transparent w-1/4 bg-fazzpay-primary/20 text-fazzpay-primary hover:bg-fazzpay-secondary hover:text-fazzpay-primary flex gap-x-3">
+												<button
+													onClick={handleDownloadPdf}
+													className="btn normal-case border-transparent w-1/4 bg-fazzpay-primary/20 text-fazzpay-primary hover:bg-fazzpay-secondary hover:text-fazzpay-primary flex gap-x-3"
+												>
 													<i className="bi bi-download"></i>
 													<p>Download PDF</p>
 												</button>
