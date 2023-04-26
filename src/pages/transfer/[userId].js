@@ -258,7 +258,7 @@ export default function TransferDetail() {
 													"id-ID"
 												)} Available`}</p>
 											</div>
-											<div className="px-60">
+											<div className="xl:px-60">
 												<div className="relative">
 													<svg
 														width="11"

@@ -1,7 +1,7 @@
 export default function Loader() {
 	return (
 		<div>
-			<div className="absolute font-nunitoSans bg-gray-700/80 z-10 h-full w-full flex items-center justify-center">
+			<div className="absolute font-nunitoSans bg-gray-700/80 z-10 h-[150vh] w-screen flex items-center justify-center">
 				<div className="flex items-center">
 					<p className="text-8xl mr-4 text-fazzpay-secondary">Loading</p>
 					<svg
