@@ -27,15 +27,28 @@ export default function Transfer() {
 	const [pagination, setPagination] = useState([]);
 	const [isLoading, setIsLoading] = useState(false);
 
-	useEffect(() => {
+	const fetching = async () => {
 		setIsLoading(true);
-		getUsers(page, 4, searchValue, token)
-			.then((res) => {
-				setUsers(res["data"]["data"]);
-				setPagination(res["data"]["pagination"]);
-			})
-			.catch((error) => console.log(error))
-			.finally(() => setIsLoading(false));
+		router.replace({
+			pathname: "/transfer",
+			query: {
+				page,
+				search: searchValue,
+			},
+		});
+		try {
+			const result = await getUsers(page, 4, searchValue, token);
+			setUsers(result["data"]["data"]);
+			setPagination(result["data"]["pagination"]);
+			setIsLoading(false);
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
+	useEffect(() => {
+		fetching();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [page, searchValue, token]);
 
 	const onSearchChange = (e) => {

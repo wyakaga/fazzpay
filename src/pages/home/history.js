@@ -12,8 +12,11 @@ import Layout from "@/components/Layout";
 import Loader from "@/components/Loader";
 
 import defaultProfile from "@/assets/img/profile-placeholder.webp";
+import { useRouter } from "next/router";
 
 export default function History() {
+	const router = useRouter();
+
 	const token = useSelector((state) => state.auth.data.token);
 
 	const [users, setUsers] = useState([]);
@@ -22,19 +25,28 @@ export default function History() {
 	const [pagination, setPagination] = useState([]);
 	const [isLoading, setIsLoading] = useState(false);
 
-	useEffect(() => {
+	const fetching = async () => {
 		setIsLoading(true);
-		history(page, 6, sort, token)
-			.then((res) => {
-				setUsers(res["data"]["data"]);
-				setPagination(res["data"]["pagination"]);
-			})
-			.catch((err) => {
-				console.log(err);
-			})
-			.finally(() => {
-				setIsLoading(false);
-			});
+		router.replace({
+			pathname: "/home/history",
+			query: {
+				page,
+				filter: sort,
+			},
+		});
+		try {
+			const result = await history(page, 6, sort, token);
+			setUsers(result["data"]["data"]);
+			setPagination(result["data"]["pagination"]);
+			setIsLoading(false);
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
+	useEffect(() => {
+		fetching();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [page, sort, token]);
 
 	const sortHandler = (e) => {

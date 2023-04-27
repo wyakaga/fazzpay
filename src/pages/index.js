@@ -21,7 +21,7 @@ import download from "@/assets/icons/download-icon.webp";
 import phone from "@/assets/icons/phone-icon.webp";
 import lock from "@/assets/icons/lock-icon.webp";
 
-export default function Home() {
+export default function Home({ reviews }) {
 	const router = useRouter();
 
 	const navigate = (to) => router.push(to);
@@ -191,148 +191,46 @@ export default function Home() {
 						</p>
 						{/* Carousel start */}
 						<div className="carousel my-[4rem]">
-							<div id="slide1" className="carousel-item relative w-full justify-center">
-								<div className="card w-[80%] h-full md:w-[55vw] rounded-[30px] bg-base-100 shadow-lg border-2">
-									<figure className="px-10 pt-10">
-										<Image
-											src={carousel1}
-											alt="Reviewer"
-											height={120}
-											width={120}
-											className="rounded-xl"
-										/>
-									</figure>
-									<div className="card-body items-center text-center">
-										<h2 className="card-title">Alex Hansinburg</h2>
-										<p>Designer</p>
-										<p>
-											“This is the most outstanding app that I’ve ever try in my live, this app is
-											such an amazing masterpiece and it’s suitable for you who is bussy with their
-											bussiness and must transfer money to another person aut there. Just try this
-											app and see the power!”
-										</p>
+							{reviews.map((review, idx) => {
+								return (
+									<div
+										key={idx}
+										id={`slide${idx}`}
+										className="carousel-item relative w-full justify-center"
+									>
+										<div className="card w-[80%] h-full md:w-[55vw] rounded-[30px] bg-base-100 shadow-lg border-2">
+											<figure className="px-10 pt-10">
+												<Image
+													src={review.image}
+													alt="Reviewer"
+													height={120}
+													width={120}
+													className="rounded-xl"
+												/>
+											</figure>
+											<div className="card-body items-center text-center">
+												<h2 className="card-title">{review.name}</h2>
+												<p>Designer</p>
+												<p>{review.comment}</p>
+											</div>
+										</div>
+										<div className="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2">
+											<a
+												href={idx === 0 ? `#slide3` : `#slide${idx - 1}`}
+												className="btn border-none bg-fazzpay-secondary hover:bg-fazzpay-dark hover:text-fazzpay-secondary w-12 h-10 md:ml-[8rem]"
+											>
+												<i className="bi bi-arrow-left text-3xl"></i>
+											</a>
+											<a
+												href={idx === 3 ? `#slide0` : `#slide${idx + 1}`}
+												className="btn border-none bg-fazzpay-secondary hover:bg-fazzpay-dark hover:text-fazzpay-secondary w-12 h-10 md:mr-[8rem]"
+											>
+												<i className="bi bi-arrow-right text-3xl"></i>
+											</a>
+										</div>
 									</div>
-								</div>
-								<div className="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2">
-									<a
-										href="#slide3"
-										className="btn border-none bg-fazzpay-secondary hover:bg-fazzpay-dark hover:text-fazzpay-secondary w-12 h-10 md:ml-[8rem]"
-									>
-										<i className="bi bi-arrow-left text-3xl"></i>
-									</a>
-									<a
-										href="#slide2"
-										className="btn border-none bg-fazzpay-secondary hover:bg-fazzpay-dark hover:text-fazzpay-secondary w-12 h-10 md:mr-[8rem]"
-									>
-										<i className="bi bi-arrow-right text-3xl"></i>
-									</a>
-								</div>
-							</div>
-							<div id="slide2" className="carousel-item relative w-full justify-center">
-								<div className="card w-[80%] h-full md:w-[55vw] rounded-[30px] bg-base-100 shadow-lg border-2">
-									<figure className="px-10 pt-10">
-										<Image
-											src={carousel2}
-											alt="Reviewer"
-											height={120}
-											width={120}
-											className="rounded-xl"
-										/>
-									</figure>
-									<div className="card-body items-center text-center">
-										<h2 className="card-title">Sherina Chaw</h2>
-										<p>Designer</p>
-										<p>
-											“I use this app since 2 years ago and this is the best app that I’ve ever use
-											in my entire life”
-										</p>
-									</div>
-								</div>
-								<div className="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2">
-									<a
-										href="#slide1"
-										className="btn border-none bg-fazzpay-secondary hover:bg-fazzpay-dark hover:text-fazzpay-secondary w-12 h-10 md:ml-[8rem]"
-									>
-										<i className="bi bi-arrow-left text-3xl"></i>
-									</a>
-									<a
-										href="#slide3"
-										className="btn border-none bg-fazzpay-secondary hover:bg-fazzpay-dark hover:text-fazzpay-secondary w-12 h-10 md:mr-[8rem]"
-									>
-										<i className="bi bi-arrow-right text-3xl"></i>
-									</a>
-								</div>
-							</div>
-							<div id="slide3" className="carousel-item relative w-full justify-center">
-								<div className="card w-[80%] h-full md:w-[55vw] rounded-[30px] bg-base-100 shadow-lg border-2">
-									<figure className="px-10 pt-10">
-										<Image
-											src={carousel3}
-											alt="Reviewer"
-											height={120}
-											width={120}
-											className="rounded-xl"
-										/>
-									</figure>
-									<div className="card-body items-center text-center">
-										<h2 className="card-title">Jessica Mera</h2>
-										<p>Designer</p>
-										<p>
-											“I use Fazzpay to manage all financial needs. It’s super easy to use and it’s
-											100% free app”
-										</p>
-									</div>
-								</div>
-								<div className="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2">
-									<a
-										href="#slide2"
-										className="btn border-none bg-fazzpay-secondary hover:bg-fazzpay-dark hover:text-fazzpay-secondary w-12 h-10 md:ml-[8rem]"
-									>
-										<i className="bi bi-arrow-left text-3xl"></i>
-									</a>
-									<a
-										href="#slide4"
-										className="btn border-none bg-fazzpay-secondary hover:bg-fazzpay-dark hover:text-fazzpay-secondary w-12 h-10 md:mr-[8rem]"
-									>
-										<i className="bi bi-arrow-right text-3xl"></i>
-									</a>
-								</div>
-							</div>
-							<div id="slide4" className="carousel-item relative w-full justify-center">
-								<div className="card w-[80%] h-full md:w-[55vw] rounded-[30px] bg-base-100 shadow-lg border-2">
-									<figure className="px-10 pt-10">
-										<Image
-											src={carousel4}
-											alt="Reviewer"
-											height={120}
-											width={120}
-											className="rounded-xl"
-										/>
-									</figure>
-									<div className="card-body items-center text-center">
-										<h2 className="card-title">Robert Chandler</h2>
-										<p>Designer</p>
-										<p>
-											“Since I’m using this app, I’m not going to move to another similar app. Thank
-											you Fazzpay!”
-										</p>
-									</div>
-								</div>
-								<div className="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2">
-									<a
-										href="#slide3"
-										className="btn border-none bg-fazzpay-secondary hover:bg-fazzpay-dark hover:text-fazzpay-secondary w-12 h-10 md:ml-[8rem]"
-									>
-										<i className="bi bi-arrow-left text-3xl"></i>
-									</a>
-									<a
-										href="#slide1"
-										className="btn border-none bg-fazzpay-secondary hover:bg-fazzpay-dark hover:text-fazzpay-secondary w-12 h-10 md:mr-[8rem]"
-									>
-										<i className="bi bi-arrow-right text-3xl"></i>
-									</a>
-								</div>
-							</div>
+								);
+							})}
 						</div>
 						{/* Carousel end */}
 					</section>
@@ -357,4 +255,37 @@ export default function Home() {
 			</Layout>
 		</PublicRoute>
 	);
+}
+
+export async function getStaticProps() {
+	const reviews = [
+		{
+			name: "Alex Hansinburg",
+			comment:
+				"“This is the most outstanding app that I’ve ever try in my live, this app is such an amazing masterpiece and it’s suitable for you who is bussy with their bussiness and must transfer money to another person aut there. Just try this app and see the power!”",
+			image: carousel1,
+		},
+		{
+			name: "Sherina Chaw",
+			comment:
+				"“I use this app since 2 years ago and this is the best app that I’ve ever use in my entire life”",
+			image: carousel2,
+		},
+		{
+			name: "Jessica Mera",
+			comment:
+				"“I use Fazzpay to manage all financial needs. It’s super easy to use and it’s 100% free app”",
+			image: carousel3,
+		},
+		{
+			name: "Robert Chandler",
+			comment:
+				"“Since I’m using this app, I’m not going to move to another similar app. Thank you Fazzpay!”",
+			image: carousel4,
+		},
+	];
+
+	return {
+		props: { reviews },
+	};
 }
