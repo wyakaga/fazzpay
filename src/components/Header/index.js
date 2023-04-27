@@ -122,16 +122,16 @@ export default function Header() {
 														<path
 															d="M14 22.1663L14 5.83301"
 															stroke="#FF5B37"
-															stroke-width="2"
-															stroke-linecap="round"
-															stroke-linejoin="round"
+															strokeWidth="2"
+															strokeLinecap="round"
+															strokeLinejoin="round"
 														/>
 														<path
 															d="M5.83334 13.9997L14 5.83301L22.1667 13.9997"
 															stroke="#FF5B37"
-															stroke-width="2"
-															stroke-linecap="round"
-															stroke-linejoin="round"
+															strokeWidth="2"
+															strokeLinecap="round"
+															strokeLinejoin="round"
 														/>
 													</svg>
 												) : (
@@ -145,16 +145,16 @@ export default function Header() {
 														<path
 															d="M14 5.83366L14 22.167"
 															stroke="#1EC15F"
-															stroke-width="2"
-															stroke-linecap="round"
-															stroke-linejoin="round"
+															strokeWidth="2"
+															strokeLinecap="round"
+															strokeLinejoin="round"
 														/>
 														<path
 															d="M22.1667 14.0003L14 22.167L5.83333 14.0003"
 															stroke="#1EC15F"
-															stroke-width="2"
-															stroke-linecap="round"
-															stroke-linejoin="round"
+															strokeWidth="2"
+															strokeLinecap="round"
+															strokeLinejoin="round"
 														/>
 													</svg>
 												)}
