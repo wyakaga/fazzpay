@@ -87,7 +87,7 @@ export default function Transfer() {
 										<div></div>
 									</section>
 									<section className="bottom flex flex-col gap-y-20">
-										<div className="flex flex-col gap-y-5">
+										<div className="flex flex-col gap-y-5 min-h-[760px] lg:min-h-[500px]">
 											{users.map((user, index) => {
 												return (
 													<div

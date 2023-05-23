@@ -104,7 +104,7 @@ export default function ChangePin() {
 												} border border-solid rounded-lg`}
 											>
 												<input
-													type="text"
+													type="password"
 													name="pin1"
 													value={pins.pin1}
 													onChange={onChangePin}
@@ -120,7 +120,7 @@ export default function ChangePin() {
 												} border border-solid rounded-lg`}
 											>
 												<input
-													type="text"
+													type="password"
 													name="pin2"
 													value={pins.pin2}
 													onChange={onChangePin}
@@ -136,7 +136,7 @@ export default function ChangePin() {
 												} border border-solid rounded-lg`}
 											>
 												<input
-													type="text"
+													type="password"
 													name="pin3"
 													value={pins.pin3}
 													onChange={onChangePin}
@@ -152,7 +152,7 @@ export default function ChangePin() {
 												} border border-solid rounded-lg`}
 											>
 												<input
-													type="text"
+													type="password"
 													name="pin4"
 													value={pins.pin4}
 													onChange={onChangePin}
@@ -168,7 +168,7 @@ export default function ChangePin() {
 												} border border-solid rounded-lg`}
 											>
 												<input
-													type="text"
+													type="password"
 													name="pin5"
 													value={pins.pin5}
 													onChange={onChangePin}
@@ -184,7 +184,7 @@ export default function ChangePin() {
 												} border border-solid rounded-lg`}
 											>
 												<input
-													type="text"
+													type="password"
 													name="pin6"
 													value={pins.pin6}
 													onChange={onChangePin}

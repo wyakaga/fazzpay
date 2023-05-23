@@ -91,7 +91,7 @@ export default function History() {
 									</section>
 								) : (
 									<section className="bottom">
-										<div className="history-cards">
+										<div className="history-cards min-h-[591px]">
 											<div className="content-wrapper flex flex-col gap-y-8">
 												{users.map((user, idx) => {
 													return (

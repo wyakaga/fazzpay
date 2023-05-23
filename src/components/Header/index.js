@@ -8,8 +8,6 @@ import { history } from "@/utils/https/transaction";
 
 import defaultPic from "@/assets/img/profile-placeholder.webp";
 
-// TODO: add dropdown to bell icon
-
 export default function Header() {
 	const router = useRouter();
 
@@ -23,8 +21,7 @@ export default function Header() {
 		getDataById(userId, token).then((res) => {
 			setData(res["data"]["data"]);
 		});
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	}, [token, userId]);
 
 	useEffect(() => {
 		history(1, 5, "WEEK", token)
@@ -35,6 +32,17 @@ export default function Header() {
 				console.log(err);
 			});
 	}, [token]);
+
+	const DROPDOWNS = [
+		{
+			label: "Profile",
+			navigate: "/profile",
+		},
+		{
+			label: "History",
+			navigate: "/home/history",
+		},
+	];
 
 	return (
 		<>
@@ -48,31 +56,46 @@ export default function Header() {
 					</p>
 				</div>
 				<div className="navbar-end flex flex-row lg:gap-x-5 gap-x-2">
-					<div
-						onClick={() => router.push("/profile")}
-						className="flex items-center gap-x-4 cursor-pointer"
-					>
-						<div>
-							<Image
-								alt="user profile"
-								src={
-									data["image"]
-										? `${process.env.NEXT_PUBLIC_CLOUDINARY_URL}${data["image"]}`
-										: defaultPic
-								}
-								width={52}
-								height={52}
-								className="rounded-md h-auto w-auto"
-							/>
-						</div>
-						<div>
-							<p className="font-bold text-lg text-fazzpay-dark">{`${
-								data["firstName"] ? data["firstName"] : "Anonymous"
-							} ${data["lastName"] ? data["lastName"] : "Anonymous"}`}</p>
-							<p className="text-sm text-fazzpay-dark/90">
-								{data["noTelp"] ? data["noTelp"] : "No Phone Number"}
-							</p>
-						</div>
+					<div className="dropdown">
+						<label tabIndex={0} className="flex items-center gap-x-4 cursor-pointer">
+							<div>
+								<Image
+									alt="user profile"
+									src={
+										data["image"]
+											? `${process.env.NEXT_PUBLIC_CLOUDINARY_URL}${data["image"]}`
+											: defaultPic
+									}
+									width={52}
+									height={52}
+									className="rounded-md h-auto w-auto"
+								/>
+							</div>
+							<div>
+								<p className="font-bold text-lg text-fazzpay-dark">{`${
+									data["firstName"] ? data["firstName"] : "Anonymous"
+								} ${data["lastName"] ? data["lastName"] : "Anonymous"}`}</p>
+								<p className="text-sm text-fazzpay-dark/90">
+									{data["noTelp"] ? data["noTelp"] : "No Phone Number"}
+								</p>
+							</div>
+						</label>
+						<ul
+							tabIndex={0}
+							className="menu dropdown-content p-4 shadow bg-fazzpay-secondary rounded-box w-80 mt-6 gap-y-5"
+						>
+							{DROPDOWNS.map((item, index) => {
+								return (
+									<li
+										key={index}
+										onClick={() => router.push(item.navigate)}
+										className="bg-fazzpay-secondary shadow-[0px_4px_20px_rgba(0,0,0,0.1)] rounded-[10px]"
+									>
+										<div className="p-4">{item.label}</div>
+									</li>
+								);
+							})}
+						</ul>
 					</div>
 					<div className="dropdown dropdown-end">
 						<label tabIndex={0} className="cursor-pointer">
