@@ -14,6 +14,10 @@ You can click the demo site [here!](fazzpay-nine.vercel.app)
 
 <img src="https://i.imgur.com/IYPNU7i.png" alt="project-screenshot" >
 
+<img src="https://i.imgur.com/twj3aWb.png" alt="project-screenshot">
+
+<img src="https://i.imgur.com/PnZ0J6q.png" alt="project-screenshot" >
+
 
 <h2>🛠️ Installation Steps:</h2>
 
@@ -55,9 +59,9 @@ npm run start
 
 Technologies used in the project:
 
-*   NextJS
-*   TailwindCSS
-*   DaisyUI
+*   [NextJS](https://nextjs.org/)
+*   [TailwindCSS](https://nextjs.org/)
+*   [DaisyUI](https://daisyui.com/)
 
 <h2>🛡️ License:</h2>
 
