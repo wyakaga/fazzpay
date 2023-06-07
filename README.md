@@ -9,14 +9,12 @@
 You can click the demo site [here!](fazzpay-nine.vercel.app)
 
 <h2>Project Screenshots:</h2>
-
-<img src="https://i.imgur.com/f9UqdCd.png" alt="project-screenshot">
-
-<img src="https://i.imgur.com/IYPNU7i.png" alt="project-screenshot" >
-
-<img src="https://i.imgur.com/twj3aWb.png" alt="project-screenshot">
-
-<img src="https://i.imgur.com/PnZ0J6q.png" alt="project-screenshot" >
+<div style="display: flex; flex-wrap: wrap; gap: 0.5%;">
+  <img src="https://i.imgur.com/f9UqdCd.png" alt="project-screenshot" width="45%">
+  <img src="https://i.imgur.com/IYPNU7i.png" alt="project-screenshot" width="45%">
+  <img src="https://i.imgur.com/twj3aWb.png" alt="project-screenshot" width="45%">
+  <img src="https://i.imgur.com/PnZ0J6q.png" alt="project-screenshot" width="45%">
+</div>
 
 
 <h2>🛠️ Installation Steps:</h2>
