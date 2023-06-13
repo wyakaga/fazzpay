@@ -1,6 +1,5 @@
 <h1 id="title" align="center">Fazzpay</h1>
 
-<p align="center"><img src="https://socialify.git.ci/wyakaga/fazzpay/image?description=1&amp;font=Inter&amp;language=1&amp;name=1&amp;owner=1&amp;pattern=Circuit%20Board&amp;theme=Dark" alt="project-image"></p>
 
 <p id="description">This is the repository for "Fazzpay: Simplify financial needs and saving much time in banking needs with one single app."</p>
 
@@ -49,7 +48,7 @@ npm run start
 
 <h2>🚀 Demo</h2>
 
-You can click the demo site [here!](fazzpay-nine.vercel.app)
+You can click the demo site [here!](https://fazzpay-nine.vercel.app/)
 
 <h2>Project Screenshots:</h2>
 <div style="display: flex; flex-wrap: wrap; gap: 0.5%;">
