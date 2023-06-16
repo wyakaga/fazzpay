@@ -1,7 +1,9 @@
 <h1 id="title" align="center">Fazzpay</h1>
 
 
-<p id="description">This is the repository for "Fazzpay: Simplify financial needs and saving much time in banking needs with one single app."</p>
+<p id="description">Fazzpay is an e-wallet web app that simplifies financial processes. Connect multiple bank
+accounts, add cards and transfer funds with ease. Send money instantly to friends and
+family.</p>
 
 <h2>💻 Built with</h2>
 
