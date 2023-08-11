@@ -11,6 +11,9 @@ const transactionSlice = createSlice({
 	name: "transaction",
 	initialState,
 	reducers: {
+		reset: () => {
+			return initialState;
+		},
 		saveAmount: (prevState, action) => {
 			return {
 				...prevState,

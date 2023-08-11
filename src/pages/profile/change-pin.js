@@ -1,16 +1,19 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 
 import { updatePin, checkPin } from "@/utils/https/user";
 import { PrivateRoute } from "@/utils/wrapper/privateRoute";
+import TokenHandler from "@/utils/wrapper/tokenHandler";
 
 import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
 import Footer from "@/components/Footer";
 import Layout from "@/components/Layout";
 
-export default function ChangePin() {
+function ChangePin() {
+	const controller = useMemo(() => new AbortController(), []);
+
 	const userId = useSelector((state) => state.auth.data.id);
 	const token = useSelector((state) => state.auth.data.token);
 
@@ -29,7 +32,7 @@ export default function ChangePin() {
 	const checkPinHandler = (e) => {
 		e.preventDefault();
 
-		toast.promise(checkPin(intPin, token), {
+		toast.promise(checkPin(intPin, token, controller), {
 			pending: "Please wait...",
 			success: {
 				render() {
@@ -40,7 +43,8 @@ export default function ChangePin() {
 			},
 			error: {
 				render({ data }) {
-					return data["response"]["data"]["msg"];
+					if (data["response"]) return data["response"]["data"]["msg"];
+					return "Something went wrong";
 				},
 			},
 		});
@@ -49,7 +53,7 @@ export default function ChangePin() {
 	const createPinHandler = (e) => {
 		e.preventDefault();
 
-		toast.promise(updatePin(intPin, userId, token), {
+		toast.promise(updatePin(intPin, userId, token, controller), {
 			pending: "Please wait",
 			success: {
 				render() {
@@ -60,7 +64,8 @@ export default function ChangePin() {
 			},
 			error: {
 				render({ data }) {
-					return data["response"]["data"]["msg"];
+					if (data["response"]) return data["response"]["data"]["msg"];
+					return "Something went wrong";
 				},
 			},
 		});
@@ -223,3 +228,5 @@ export default function ChangePin() {
 		</>
 	);
 }
+
+export default TokenHandler(ChangePin);

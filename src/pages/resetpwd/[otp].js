@@ -4,11 +4,12 @@ import { toast } from "react-toastify";
 
 import { resetPwd } from "@/utils/https/auth";
 import { PublicRoute } from "@/utils/wrapper/publicRoute";
+import TokenHandler from "@/utils/wrapper/tokenHandler";
 
 import AuthLeft from "@/components/AuthLeft";
 import Layout from "@/components/Layout";
 
-export default function NewPwd() {
+function NewPwd() {
 	const { query } = useRouter();
 	const router = useRouter();
 
@@ -216,3 +217,5 @@ export default function NewPwd() {
 		</PublicRoute>
 	);
 }
+
+export default TokenHandler(NewPwd);

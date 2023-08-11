@@ -5,11 +5,12 @@ import { toast } from "react-toastify";
 
 import { signup } from "@/utils/https/auth";
 import { PublicRoute } from "@/utils/wrapper/publicRoute";
+import TokenHandler from "@/utils/wrapper/tokenHandler";
 
 import AuthLeft from "@/components/AuthLeft";
 import Layout from "@/components/Layout";
 
-export default function SignUp() {
+function SignUp() {
 	const router = useRouter();
 
 	const [visible, setVisible] = useState(false);
@@ -25,16 +26,24 @@ export default function SignUp() {
 		e.preventDefault();
 
 		toast.promise(signup(form), {
-			pending: "Please wait...",
+			pending: {
+				render() {
+					e.target.disabled = true;
+					return "Please wait...";
+				}
+			},
 			success: {
 				render() {
+					e.target.disabled = false;
 					router.push("/login");
 					return "Successfully signed up, please check your email for confirmation";
 				},
 			},
 			error: {
 				render({ data }) {
-					return data["response"]["data"]["msg"];
+					e.target.disabled = false;
+					if (data["response"]) return data["response"]["data"]["msg"];
+					return "Something went wrong";
 				},
 			},
 		});
@@ -61,7 +70,7 @@ export default function SignUp() {
 								</p>
 							</div>
 							<div className="form-wrapper flex flex-col gap-y-5">
-								<form className="flex flex-col gap-y-10">
+								<form onSubmit={signupHandler} className="flex flex-col gap-y-10">
 									<div className="relative w-full ease-in-out transition-all duration-300">
 										<input
 											type="text"
@@ -224,16 +233,16 @@ export default function SignUp() {
 											/>
 										</svg>
 									</div>
+									<div className="signup-button">
+										<button
+											disabled={!form.firstName || !form.lastName || !form.email || !form.password}
+											onClick={signupHandler}
+											className="btn normal-case w-full border-transparent text-fazzpay-secondary bg-fazzpay-primary hover:text-fazzpay-primary hover:bg-fazzpay-secondary disabled:bg-[#DADADA] disabled:text-[#88888F]"
+										>
+											Signup
+										</button>
+									</div>
 								</form>
-								<div className="signup-button pt-10">
-									<button
-										disabled={!form.firstName || !form.lastName || !form.email || !form.password}
-										onClick={signupHandler}
-										className="btn normal-case w-full border-transparent text-fazzpay-secondary bg-fazzpay-primary hover:text-fazzpay-primary hover:bg-fazzpay-secondary disabled:bg-[#DADADA] disabled:text-[#88888F]"
-									>
-										Signup
-									</button>
-								</div>
 								<div className="signup flex justify-center pt-8 px-10">
 									<Link href={"/login"} className="text-center">
 										Already have an account? Let&rsquo;s{" "}
@@ -248,3 +257,5 @@ export default function SignUp() {
 		</PublicRoute>
 	);
 }
+
+export default TokenHandler(SignUp);

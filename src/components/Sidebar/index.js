@@ -1,12 +1,14 @@
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo, Fragment } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Dialog } from "@headlessui/react";
+import { Dialog, Transition } from "@headlessui/react";
 import { toast } from "react-toastify";
 
 import { topUp } from "@/utils/https/transaction";
 import { logout } from "@/utils/https/auth";
 import { authAction } from "@/redux/slices/auth";
+import { userAction } from "@/redux/slices/user";
+import { transactionAction } from "@/redux/slices/transaction";
 
 export default function Sidebar() {
 	const dispatch = useDispatch();
@@ -20,8 +22,10 @@ export default function Sidebar() {
 		inactive: "text-fazzpay-dark/80",
 	};
 
+	const controller = useMemo(() => new AbortController(), []);
+
 	const token = useSelector((state) => state.auth.data.token);
-	const phoneNumber = useSelector((state) => state.user.phoneNumber);
+	const phoneNumber = useSelector((state) => state.user.data?.noTelp);
 
 	const [isHomeActive, setIsHomeActive] = useState(false);
 	const [isTransferActive, setIsTransferActive] = useState(false);
@@ -72,10 +76,16 @@ export default function Sidebar() {
 	const topUpHandler = (e) => {
 		e.preventDefault();
 
-		toast.promise(topUp(amount, token), {
-			pending: "Please wait...",
+		toast.promise(topUp(amount, token, controller), {
+			pending: {
+				render() {
+					e.target.disabled = true;
+					return "Please wait..."
+				}
+		},
 			success: {
 				render({ data }) {
+					e.target.disabled = false;
 					setAmount("");
 					const redirectUrl = data["data"]["data"]["redirectUrl"];
 					setTimeout(() => {
@@ -86,7 +96,9 @@ export default function Sidebar() {
 			},
 			error: {
 				render({ data }) {
-					return data["response"]["data"]["msg"];
+					e.target.disabled = false;
+					if (data["response"]) return data["response"]["data"]["msg"];
+					return "Something went wrong";
 				},
 			},
 		});
@@ -110,17 +122,27 @@ export default function Sidebar() {
 		e.preventDefault();
 
 		toast.promise(logout(token), {
-			pending: "Please wait...",
+			pending: {
+				render() {
+					e.target.disabled = true;
+					return "Please wait..."
+				}
+			},
 			success: {
 				render() {
+					e.target.disabled = false;
 					router.push("/");
 					dispatch(authAction.remove());
+					dispatch(userAction.reset());
+					dispatch(transactionAction.reset());
 					return "Succesfully logged out";
 				},
 			},
 			error: {
 				render({ data }) {
-					return data["response"]["data"]["msg"];
+					e.target.disabled = false;
+					if (data["response"]) return data["response"]["data"]["msg"];
+					return "Something went wrong";
 				},
 			},
 		});
@@ -133,7 +155,7 @@ export default function Sidebar() {
 					onClick={() => toHomeHandler()}
 					className={`dashboard flex gap-x-5 items-center cursor-pointer ${
 						isHomeActive === true ? style.active : style.inactive
-					} hover:text-fazzpay-primary hover:font-bold hover:border-l-[5px] hover:border-l-fazzpay-primary`}
+					} hover:text-fazzpay-primary hover:font-bold hover:border-l-[5px] hover:border-l-fazzpay-primary duration-300`}
 				>
 					<div className="tab-icon pl-10">
 						<svg
@@ -180,7 +202,7 @@ export default function Sidebar() {
 					onClick={() => toTransferHandler()}
 					className={`transfer flex gap-x-5 items-center cursor-pointer ${
 						isTransferActive === true ? style.active : style.inactive
-					} hover:text-fazzpay-primary hover:font-bold hover:border-l-[5px] hover:border-l-fazzpay-primary`}
+					} hover:text-fazzpay-primary hover:font-bold hover:border-l-[5px] hover:border-l-fazzpay-primary duration-300`}
 				>
 					<div className="tab-icon pl-10">
 						<svg
@@ -213,7 +235,7 @@ export default function Sidebar() {
 					onClick={() => toTopUpHandler()}
 					className={`top-up flex gap-x-5 items-center cursor-pointer ${
 						isTopUpActive === true ? style.active : style.inactive
-					} hover:text-fazzpay-primary hover:font-bold hover:border-l-[5px] hover:border-l-fazzpay-primary`}
+					} hover:text-fazzpay-primary hover:font-bold hover:border-l-[5px] hover:border-l-fazzpay-primary duration-300`}
 				>
 					<div className="tab-icon pl-10">
 						<svg
@@ -246,7 +268,7 @@ export default function Sidebar() {
 					onClick={() => toProfileHandler()}
 					className={`profile flex gap-x-5 items-center cursor-pointer ${
 						isProfileActive === true ? style.active : style.inactive
-					} hover:text-fazzpay-primary hover:font-bold hover:border-l-[5px] hover:border-l-fazzpay-primary`}
+					} hover:text-fazzpay-primary hover:font-bold hover:border-l-[5px] hover:border-l-fazzpay-primary duration-300`}
 				>
 					<div className="tab-icon pl-10">
 						<svg
@@ -281,7 +303,7 @@ export default function Sidebar() {
 					onClick={() => toLogoutHandler()}
 					className={`logout flex gap-x-5 items center cursor-pointer ${
 						isLogoutActive === true ? style.active : style.inactive
-					} hover:text-fazzpay-primary hover:font-bold hover:border-l-[5px] hover:border-l-fazzpay-primary`}
+					} hover:text-fazzpay-primary hover:font-bold hover:border-l-[5px] hover:border-l-fazzpay-primary duration-300`}
 				>
 					<div className="tab-icon pl-10">
 						<svg
@@ -318,82 +340,132 @@ export default function Sidebar() {
 					<div className="tab-title text-lg text-current">Logout</div>
 				</div>
 			</section>
-			<Dialog
-				open={isTopUpActive}
-				onClose={topUpCloseHandler}
-				className="fixed z-10 bg-black/70 inset-0 overflow-y-auto"
-			>
-				<div className="flex items-center justify-center min-h-screen px-4 md:px-0">
-					<div className="bg-fazzpay-secondary w-full md:w-1/2 lg:w-1/3 p-5 rounded-lg shadow-lg z-20">
-						<div className="flex flex-col gap-y-10">
-							<div className="flex flex-col gap-y-5">
-								<div className="flex items-center justify-between">
-									<p className="font-bold text-2xl text-fazzpay-dark">Topup</p>
-									<svg
-										xmlns="http://www.w3.org/2000/svg"
-										width="16"
-										height="16"
-										fill="currentColor"
-										onClick={() => topUpCloseHandler()}
-										className="bi bi-x-lg h-6 w-6 fill-fazzpay-dark cursor-pointer"
-										viewBox="0 0 16 16"
-									>
-										<path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z" />
-									</svg>
-								</div>
-								<p className="text-fazzpay-dark/60">
-									Enter the amount of money, and click <br /> submit
-								</p>
-							</div>
-							<div className="border border-[#A9A9A999] rounded-md flex justify-center">
-								<input
-									value={amount}
-									onChange={onAmountChange}
-									type="number"
-									className={`h-16 text-lg border-b rounded-none ${
-										amount ? "border-transparent" : "border-[#A9A9A966]"
-									} focus:outline-none bg-transparent w-3/4 mb-2 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`}
-								/>
-							</div>
-							<div className="submit-button pt-10 flex justify-end">
-								<button
-									onClick={(e) => topUpHandler(e)}
-									className="btn normal-case w-1/4 border-transparent text-fazzpay-secondary bg-fazzpay-primary hover:text-fazzpay-primary hover:bg-fazzpay-secondary disabled:bg-[#DADADA] disabled:text-[#88888F]"
-								>
-									Submit
-								</button>
-							</div>
+			<Transition appear show={isTopUpActive} as={Fragment}>
+				<Dialog
+					as="div"
+					onClose={topUpCloseHandler}
+					className="relative z-[51]"
+				>
+					<Transition.Child
+						as={Fragment}
+						enter="ease-out duration-300"
+						enterFrom="opacity-0"
+						enterTo="opacity-100"
+						leave="ease-in duration-200"
+						leaveFrom="opacity-100"
+						leaveTo="opacity-0"
+					>
+						<div className="fixed bg-gray-700/80 inset-0 overflow-y-auto" />
+					</Transition.Child>
+					<div className="fixed inset-0 overflow-y-auto">
+						<div className="flex items-center justify-center min-h-screen">
+							<Transition.Child
+								as={Fragment}
+								enter="ease-out duration-300"
+								enterFrom="opacity-0 scale-95"
+								enterTo="opacity-100 scale-100"
+								leave="ease-in duration-200"
+								leaveFrom="opacity-100 scale-100"
+								leaveTo="opacity-0 scale-95"
+							>
+								<Dialog.Panel className="bg-fazzpay-secondary w-full md:w-1/2 lg:w-1/3 p-5 rounded-lg shadow-lg z-[52]">
+									<div className="flex flex-col gap-y-10">
+										<div className="flex flex-col gap-y-5">
+											<div className="flex items-center justify-between">
+												<p className="font-bold text-2xl text-fazzpay-dark">Topup</p>
+												<svg
+													xmlns="http://www.w3.org/2000/svg"
+													width="16"
+													height="16"
+													fill="currentColor"
+													onClick={() => topUpCloseHandler()}
+													className="bi bi-x-lg h-6 w-6 fill-fazzpay-dark cursor-pointer"
+													viewBox="0 0 16 16"
+												>
+													<path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z" />
+												</svg>
+											</div>
+											<p className="text-fazzpay-dark/60">
+												Enter the amount of money, and click <br /> submit
+											</p>
+										</div>
+										<div className="border border-[#A9A9A999] rounded-md flex justify-center">
+											<input
+												value={amount}
+												onChange={onAmountChange}
+												type="number"
+												className={`h-16 text-lg border-b rounded-none ${
+													amount ? "border-transparent" : "border-[#A9A9A966]"
+												} focus:outline-none bg-transparent w-3/4 mb-2 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`}
+											/>
+										</div>
+										<div className="submit-button pt-10 flex justify-end">
+											<button
+												onClick={(e) => topUpHandler(e)}
+												className="btn normal-case w-1/4 border-transparent text-fazzpay-secondary bg-fazzpay-primary hover:text-fazzpay-primary hover:bg-fazzpay-secondary disabled:bg-[#DADADA] disabled:text-[#88888F]"
+											>
+												Submit
+											</button>
+										</div>
+									</div>
+								</Dialog.Panel>
+							</Transition.Child>
 						</div>
 					</div>
-				</div>
-			</Dialog>
-			<Dialog
-				open={isLogoutActive}
-				onClose={logoutCloseHandler}
-				className="fixed z-10 bg-black/70 inset-0 overflow-y-auto"
-			>
-				<div className="flex items-center justify-center min-h-screen">
-					<div className="bg-fazzpay-secondary w-1/2 p-16 rounded-lg shadow-lg text-center z-20">
-						<p className="text-2xl font-bold mb-2">Are you sure?</p>
-						<div className="logout-button pt-10">
-							<button
-								onClick={logoutHandler}
-								className="btn normal-case w-full border-transparent text-fazzpay-secondary bg-fazzpay-primary hover:text-fazzpay-primary hover:bg-fazzpay-secondary disabled:bg-[#DADADA] disabled:text-[#88888F]"
+				</Dialog>
+			</Transition>
+			<Transition appear show={isLogoutActive} as={Fragment}>
+				<Dialog
+					as="div"
+					onClose={logoutCloseHandler}
+					className="relative z-[51]"
+				>
+					<Transition.Child
+						as={Fragment}
+						enter="ease-out duration-300"
+						enterFrom="opacity-0"
+						enterTo="opacity-100"
+						leave="ease-in duration-200"
+						leaveFrom="opacity-100"
+						leaveTo="opacity-0"
+					>
+						<div className="fixed bg-gray-700/80 inset-0 overflow-y-auto" />
+					</Transition.Child>
+					<div className="fixed inset-0 overflow-y-auto">
+						<div className="flex items-center justify-center min-h-screen">
+							<Transition.Child
+								as={Fragment}
+								enter="ease-out duration-300"
+								enterFrom="opacity-0 scale-95"
+								enterTo="opacity-100 scale-100"
+								leave="ease-in duration-200"
+								leaveFrom="opacity-100 scale-100"
+								leaveTo="opacity-0 scale-95"
 							>
-								Yes
-							</button>
-						</div>
-						<div className="cancel-button pt-10">
-							<button
-								onClick={logoutCloseHandler}
-								className="btn normal-case w-full border-transparent text-fazzpay-secondary bg-fazzpay-error hover:text-fazzpay-error hover:bg-fazzpay-secondary"
-							>
-								No
-							</button>
+								<Dialog.Panel className="bg-fazzpay-secondary w-1/2 p-16 rounded-lg shadow-lg text-center z-20">
+									<p className="text-2xl font-bold mb-2">Are you sure?</p>
+									<div className="logout-button pt-10">
+										<button
+											onClick={logoutHandler}
+											className="btn normal-case w-full border-transparent text-fazzpay-secondary bg-fazzpay-primary hover:text-fazzpay-primary hover:bg-fazzpay-secondary disabled:bg-[#DADADA] disabled:text-[#88888F]"
+										>
+											Yes
+										</button>
+									</div>
+									<div className="cancel-button pt-10">
+										<button
+											onClick={logoutCloseHandler}
+											className="btn normal-case w-full border-transparent text-fazzpay-secondary bg-fazzpay-error hover:text-fazzpay-error hover:bg-fazzpay-secondary"
+										>
+											No
+										</button>
+									</div>
+								</Dialog.Panel>
+							</Transition.Child>
 						</div>
 					</div>
-				</div>
-			</Dialog>
+				</Dialog>
+			</Transition>
 		</section>
 	);
 }

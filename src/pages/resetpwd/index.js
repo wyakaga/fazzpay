@@ -3,11 +3,12 @@ import { toast } from "react-toastify";
 
 import { forgotPwd } from "@/utils/https/auth";
 import { PublicRoute } from "@/utils/wrapper/publicRoute";
+import TokenHandler from "@/utils/wrapper/tokenHandler";
 
 import AuthLeft from "@/components/AuthLeft";
 import Layout from "@/components/Layout";
 
-export default function ResetPwd() {
+function ResetPwd() {
 	const [email, setEmail] = useState("");
 
 	const onChangeEmail = (e) => {
@@ -107,3 +108,5 @@ export default function ResetPwd() {
 		</PublicRoute>
 	);
 }
+
+export default TokenHandler(ResetPwd);

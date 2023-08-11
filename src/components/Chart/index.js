@@ -1,25 +1,10 @@
+import React, { useEffect, useRef } from "react";
 import Chart from "chart.js/auto";
-import React, { useEffect, useRef, useState } from "react";
-import { useSelector } from "react-redux";
 
-import { getData } from "@/utils/https/transaction";
+function BarChart({ listIncome, listExpense }) {
 
-function BarChart() {
 	const chartContainer = useRef(null);
 	const chartRef = useRef(null);
-
-	const [listIncome, setListIncome] = useState([]);
-	const [listExpense, setListExpense] = useState([]);
-
-	const userId = useSelector((state) => state.auth.data.id);
-	const token = useSelector((state) => state.auth.data.token);
-
-	useEffect(() => {
-		getData(userId, token).then((res) => {
-			setListIncome(res["data"]["data"]["listIncome"]);
-			setListExpense(res["data"]["data"]["listExpense"]);
-		});
-	}, [userId, token]);
 
 	useEffect(() => {
 		if (chartContainer && chartContainer.current) {

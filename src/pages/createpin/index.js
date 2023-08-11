@@ -1,18 +1,22 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
 import { toast } from "react-toastify";
 
 import { updatePin } from "@/utils/https/user";
 import { authAction } from "@/redux/slices/auth";
+import { userAction } from "@/redux/slices/user";
 import { PrivateRoute } from "@/utils/wrapper/privateRoute";
+import TokenHandler from "@/utils/wrapper/tokenHandler";
 
 import AuthLeft from "@/components/AuthLeft";
 import Layout from "@/components/Layout";
 
-export default function CreatePin() {
+function CreatePin() {
 	const router = useRouter();
 	const dispatch = useDispatch();
+
+	const controller = useMemo(() => new AbortController(), []);
 
 	const [pins, setPins] = useState({ pin1: "", pin2: "", pin3: "", pin4: "", pin5: "", pin6: "" });
 
@@ -31,18 +35,20 @@ export default function CreatePin() {
 		let arrayPin = Object.keys(pins).map((key) => pins[key]);
 		const intPin = parseInt(arrayPin.join(""));
 
-		toast.promise(updatePin(intPin, userId, token), {
+		toast.promise(updatePin(intPin, userId, token, controller), {
 			pending: "Please wait",
 			success: {
 				render() {
 					router.push("/");
 					dispatch(authAction.remove());
+					dispatch(userAction.reset());
 					return "Succesfully created pin, please login again";
 				},
 			},
 			error: {
 				render({ data }) {
-					return data["response"]["data"]["msg"];
+					if (data["response"]) return data["response"]["data"]["msg"];
+					return "Something went wrong";
 				},
 			},
 		});
@@ -191,3 +197,5 @@ export default function CreatePin() {
 		</PrivateRoute>
 	);
 }
+
+export default TokenHandler(CreatePin);

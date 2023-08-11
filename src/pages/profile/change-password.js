@@ -1,16 +1,19 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 
 import { updatePwd } from "@/utils/https/user";
 import { PrivateRoute } from "@/utils/wrapper/privateRoute";
+import TokenHandler from "@/utils/wrapper/tokenHandler";
 
 import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
 import Footer from "@/components/Footer";
 import Layout from "@/components/Layout";
 
-export default function ChangePwd() {
+function ChangePwd() {
+	const controller = useMemo(() => new AbortController(), []);
+
 	const userId = useSelector((state) => state.auth.data.id);
 	const token = useSelector((state) => state.auth.data.token);
 
@@ -36,7 +39,7 @@ export default function ChangePwd() {
 	const changePwdHandler = (e) => {
 		e.preventDefault();
 
-		toast.promise(updatePwd(currentPassword, newPassword, confirmPassword, userId, token), {
+		toast.promise(updatePwd(currentPassword, newPassword, confirmPassword, userId, token, controller), {
 			pending: "Please wait...",
 			success: {
 				render() {
@@ -48,7 +51,8 @@ export default function ChangePwd() {
 			},
 			error: {
 				render({ data }) {
-					return data["response"]["data"]["msg"];
+					if (data["response"]) return data["response"]["data"]["msg"];
+					return "Something went wrong";
 				},
 			},
 		});
@@ -297,3 +301,5 @@ export default function ChangePwd() {
 		</>
 	);
 }
+
+export default TokenHandler(ChangePwd);

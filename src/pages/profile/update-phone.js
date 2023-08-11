@@ -1,20 +1,34 @@
-import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useState, useCallback, useMemo } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 
 import { updatePhone } from "@/utils/https/user";
+import { userAction } from "@/redux/slices/user";
 import { PrivateRoute } from "@/utils/wrapper/privateRoute";
+import TokenHandler from "@/utils/wrapper/tokenHandler";
 
 import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
 import Footer from "@/components/Footer";
 import Layout from "@/components/Layout";
 
-export default function ChangePwd() {
+function ChangePwd() {
+	const dispatch = useDispatch();
+
+	const controller = useMemo(() => new AbortController(), []);
+
 	const userId = useSelector((state) => state.auth.data.id);
 	const token = useSelector((state) => state.auth.data.token);
 
 	const [phoneNumber, setPhoneNumber] = useState("");
+
+	const fetchUserData = useCallback(() => {
+		try {
+			dispatch(userAction.getUserThunk({ userId, token, controller }));
+		} catch (error) {
+			console.log(error);
+		}
+	}, [dispatch, userId, token, controller]);
 
 	const onChangePhone = (e) => {
 		setPhoneNumber(e.target.value);
@@ -23,17 +37,26 @@ export default function ChangePwd() {
 	const changePhoneHandler = (e) => {
 		e.preventDefault();
 
-		toast.promise(updatePhone(phoneNumber, userId, token), {
-			pending: "Please wait...",
+		toast.promise(updatePhone(phoneNumber, userId, token, controller), {
+			pending: {
+				render() {
+					e.target.disabled = true;
+					return "Please wait..."
+				}
+			},
 			success: {
 				render() {
+					e.target.disabled = false;
 					setPhoneNumber("");
+					fetchUserData();
 					return "Phone number successfully changed";
 				},
 			},
 			error: {
 				render({ data }) {
-					return data["response"]["data"]["msg"];
+					e.target.disabled = false;
+					if (data["response"]) return data["response"]["data"]["msg"];
+					return "Something went wrong";
 				},
 			},
 		});
@@ -64,7 +87,7 @@ export default function ChangePwd() {
 								</section>
 								<section className="bottom xl:px-40">
 									<div className="form-wrapper flex flex-col gap-y-1">
-										<form className="flex flex-col gap-y-10">
+										<form onSubmit={changePhoneHandler} className="flex flex-col gap-y-10">
 											<div className="relative w-full ease-in-out transition-all duration-300">
 												<input
 													type="text"
@@ -98,16 +121,16 @@ export default function ChangePwd() {
 													<p className="font-semibold text-[#3A3D42]">+62</p>
 												</div>
 											</div>
+											<div className="updatePhone-button">
+												<button
+													disabled={!phoneNumber}
+													onClick={changePhoneHandler}
+													className="btn normal-case border-transparent w-full bg-fazzpay-primary text-fazzpay-secondary hover:bg-fazzpay-secondary hover:text-fazzpay-primary disabled:bg-[#DADADA] disabled:text-[#88888F]"
+												>
+													Edit Phone Number
+												</button>
+											</div>
 										</form>
-										<div className="updatePhone-button pt-10">
-											<button
-												disabled={!phoneNumber}
-												onClick={changePhoneHandler}
-												className="btn normal-case border-transparent w-full bg-fazzpay-primary text-fazzpay-secondary hover:bg-fazzpay-secondary hover:text-fazzpay-primary disabled:bg-[#DADADA] disabled:text-[#88888F]"
-											>
-												Edit Phone Number
-											</button>
-										</div>
 									</div>
 								</section>
 							</section>
@@ -120,3 +143,5 @@ export default function ChangePwd() {
 		</>
 	);
 }
+
+export default TokenHandler(ChangePwd);

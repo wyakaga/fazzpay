@@ -4,9 +4,9 @@ import { useSelector } from "react-redux";
 
 export const PhoneCheck = ({ children }) => {
 	const router = useRouter();
-	const phoneNumber = useSelector((state) => state.user.phoneNumber);
+	const phoneNumber = useSelector((state) => state.user.data.noTelp);
 	useEffect(() => {
-		if (phoneNumber === null) router.push("/profile/update-phone");
+		if (!phoneNumber) router.push("/profile/update-phone");
 	}, [router, phoneNumber]);
 	return <>{children}</>;
 };

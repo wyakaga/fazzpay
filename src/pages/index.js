@@ -2,6 +2,7 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 
 import { PublicRoute } from "@/utils/wrapper/publicRoute";
+import TokenHandler from "@/utils/wrapper/tokenHandler";
 
 import Layout from "@/components/Layout";
 
@@ -21,7 +22,7 @@ import download from "@/assets/icons/download-icon.webp";
 import phone from "@/assets/icons/phone-icon.webp";
 import lock from "@/assets/icons/lock-icon.webp";
 
-export default function Home({ reviews }) {
+function Home({ reviews }) {
 	const router = useRouter();
 
 	const navigate = (to) => router.push(to);
@@ -32,7 +33,7 @@ export default function Home({ reviews }) {
 				{/* <Header /> */}
 				<div className="container">
 					{/* header start */}
-					<div className="navbar lg:px-28 px-4 py-6 font-nunitoSans bg-fazzpay-primary/80 fixed top-0 left-0 z-50">
+					<div className="navbar lg:px-28 px-4 py-6 font-nunitoSans bg-fazzpay-primary/50 backdrop-filter backdrop-blur-xl fixed top-0 left-0 z-50">
 						<div className="navbar-start">
 							<p className="text-3xl text-fazzpay-secondary font-bold">FazzPay</p>
 						</div>
@@ -289,3 +290,5 @@ export async function getStaticProps() {
 		props: { reviews },
 	};
 }
+
+export default TokenHandler(Home);
